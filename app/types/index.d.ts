@@ -1,4 +1,4 @@
-interface Book {
+export interface Book {
   id: number;
   title: string;
   author: string;
@@ -11,5 +11,11 @@ interface Book {
   cover: string;
   video: string;
   summary: string;
-  isLoanedBook: boolean;
+  isLoanedBook?: boolean;
+}
+
+export interface BookListProps {
+  title: string;
+  books: Book[];
+  containerClassName?: string;
 }
