@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { hash } from 'bcryptjs';
 import { db } from '@/database/drizzle';
 import { users } from '@/database/schema';
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, 'email' | 'password'>,
@@ -82,4 +82,8 @@ export const signUp = async (params: AuthCredentials) => {
       error: 'Signup error',
     };
   }
+};
+
+export const logout = async () => {
+  await signOut();
 };
