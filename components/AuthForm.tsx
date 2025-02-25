@@ -26,6 +26,8 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { FIELD_NAMES, FIELD_TYPES } from '@/constants';
 import ImageUpload from './ImageUpload';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface Props<T extends FieldValues> {
   schema: ZodType<T>;
@@ -41,6 +43,8 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: Props<T>) => {
   const isSignIn = type === 'SIGN_IN';
+
+  const router = useRouter();
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
@@ -48,6 +52,22 @@ const AuthForm = <T extends FieldValues>({
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
     console.log(data);
+    const result = await onSubmit(data);
+
+    if (result.success) {
+      toast.success('Successfully signed in', {
+        description: isSignIn
+          ? 'You have successfully signed in to your account'
+          : 'You have successfully created your account',
+      });
+
+      router.push('/');
+    } else {
+      toast.error(`Error ${isSignIn ? 'signing in' : 'signing up'}`, {
+        description:
+          result.error ?? 'An error occurred. Please try again later',
+      });
+    }
   };
 
   return (

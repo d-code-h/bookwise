@@ -19,3 +19,29 @@ export interface BookListProps {
   books: Book[];
   containerClassName?: string;
 }
+
+export interface AuthCredentials {
+  fullName: string;
+  email: string;
+  password: string;
+  universityId: number;
+  universityCard: string;
+}
+
+export interface BookParams {
+  title: string;
+  author: string;
+  genre: string;
+  rating: number;
+  coverUrl: string;
+  coverColor: string;
+  description: string;
+  totalCopies: number;
+  videoUrl: string;
+  summary: string;
+}
+
+export interface BorrowBookParams {
+  bookId: string;
+  userId: string;
+}

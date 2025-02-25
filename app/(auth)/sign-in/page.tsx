@@ -3,6 +3,7 @@
 import AuthForm from '@/components/AuthForm';
 import React from 'react';
 import { signInSchema } from '@/lib/validations';
+import { signInWithCredentials } from '@/lib/actions/auth.action';
 
 const SignIn = () => {
   return (
@@ -13,11 +14,7 @@ const SignIn = () => {
         email: '',
         password: '',
       }}
-      onSubmit={async (data) => {
-        return {
-          success: true,
-        };
-      }}
+      onSubmit={signInWithCredentials}
     />
   );
 };

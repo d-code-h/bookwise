@@ -1,6 +1,7 @@
 'use client';
 
 import AuthForm from '@/components/AuthForm';
+import { signUp } from '@/lib/actions/auth.action';
 import { signUpSchema } from '@/lib/validations';
 import React from 'react';
 
@@ -16,11 +17,7 @@ const SignUp = () => {
         universityId: 0,
         universityCard: '',
       }}
-      onSubmit={async (data) => {
-        return {
-          success: true,
-        };
-      }}
+      onSubmit={signUp}
     />
   );
 };
