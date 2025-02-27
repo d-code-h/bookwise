@@ -19,17 +19,13 @@ export const sendEmail = async ({
   message: string;
 }) => {
   try {
-    emailjs.send(
-      serviceId,
-      templateId,
-      {
-        from: 'Bookwise <habeebdh1@gmail.com>',
-        to_email: email,
-        subject: subject,
-        message: message,
-      },
-      publicKey,
-    );
+    emailjs.init(publicKey);
+    await emailjs.send(serviceId, templateId, {
+      from: 'Bookwise <habeebdh1@gmail.com>',
+      to_email: email,
+      subject: subject,
+      message: message,
+    });
   } catch (error) {
     console.error('Error sending email:', error);
   }
