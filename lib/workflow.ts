@@ -7,7 +7,7 @@ export const workflowClient = new WorkflowClient({
   token: config.env.upstash.qstashToken,
 });
 
-const { serviceId, templateId } = config.env.emailjs;
+const { serviceId, publicKey, templateId } = config.env.emailjs;
 
 export const sendEmail = async ({
   email,
@@ -19,6 +19,10 @@ export const sendEmail = async ({
   message: string;
 }) => {
   try {
+    // Intialize emailjs
+    emailjs.init(publicKey);
+
+    // Send email
     await emailjs.send(serviceId, templateId, {
       from_name: 'Bookwise <habeebdh1@gmail.com>',
       to_email: email,

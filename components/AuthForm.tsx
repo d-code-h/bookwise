@@ -28,7 +28,6 @@ import { FIELD_NAMES, FIELD_TYPES } from '@/constants';
 import ImageUpload from './ImageUpload';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import emailjs from '@emailjs/browser';
 import config from '@/lib/config';
 
 interface Props<T extends FieldValues> {
@@ -37,8 +36,6 @@ interface Props<T extends FieldValues> {
   onSubmit: (data: T) => Promise<{ success: boolean; error?: string }>;
   type: 'SIGN_IN' | 'SIGN_UP';
 }
-
-const { publicKey } = config.env.emailjs;
 
 const AuthForm = <T extends FieldValues>({
   type,
@@ -53,10 +50,6 @@ const AuthForm = <T extends FieldValues>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
   });
-
-  useEffect(() => {
-    emailjs.init(publicKey);
-  }, []);
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
     console.log(data);
