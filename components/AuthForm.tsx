@@ -38,7 +38,7 @@ interface Props<T extends FieldValues> {
   type: 'SIGN_IN' | 'SIGN_UP';
 }
 
-const { serviceId, publicKey, templateId } = config.env.emailjs;
+const { publicKey } = config.env.emailjs;
 
 const AuthForm = <T extends FieldValues>({
   type,
@@ -54,7 +54,9 @@ const AuthForm = <T extends FieldValues>({
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
-  useEffect(() => emailjs.init(publicKey), []);
+  useEffect(() => {
+    emailjs.init(publicKey);
+  }, []);
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
     console.log(data);

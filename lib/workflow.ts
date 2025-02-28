@@ -20,8 +20,9 @@ export const sendEmail = async ({
 }) => {
   try {
     await emailjs.send(serviceId, templateId, {
-      from: 'Bookwise <habeebdh1@gmail.com>',
+      from_name: 'Bookwise <habeebdh1@gmail.com>',
       to_email: email,
+      project: 'Bookwise',
       subject: subject,
       message: message,
     });
