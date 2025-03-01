@@ -1,5 +1,5 @@
 'use server';
-import { AuthCredentials } from '@/app/types';
+import { AuthCredentials } from '@/types';
 
 import { eq } from 'drizzle-orm';
 import { hash } from 'bcryptjs';

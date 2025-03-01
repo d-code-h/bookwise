@@ -1,6 +1,6 @@
 import React from 'react';
 import BookCard from './BookCard';
-import { BookListProps } from '@/app/types';
+import { BookListProps } from '@/types';
 
 const BookList = ({ title, books, containerClassName }: BookListProps) => {
   return (

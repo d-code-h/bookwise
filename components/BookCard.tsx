@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 import Image from 'next/image';
 import { Button } from './ui/button';
-import { Book } from '@/app/types';
+import { Book } from '@/types';
 const BookCard = ({
   id,
   title,

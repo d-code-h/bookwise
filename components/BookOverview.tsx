@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React from 'react';
 import { Button } from './ui/button';
 import BookCover from './BookCover';
-import { Book } from '@/app/types';
+import { Book } from '@/types';
 
 const BookOverview = ({
   title,
