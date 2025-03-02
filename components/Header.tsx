@@ -11,7 +11,6 @@ import { logout } from '@/lib/actions/auth.action';
 
 const Header = ({ session }: { session: Session }) => {
   const pathname = usePathname();
-  console.log(session);
   return (
     <header className="my-10 flex justify-between gap-5">
       <Link href="/">
