@@ -12,7 +12,7 @@ export interface Book {
   videoUrl: string;
   summary: string;
   createdAt: Date | null;
-  isLoanedBook: boolean;
+  isLoanedBook: boolean | null;
 }
 
 export interface BookListProps {

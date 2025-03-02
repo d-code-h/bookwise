@@ -16,6 +16,7 @@ const BookOverview = ({
   coverUrl,
   userId,
 }: Book & { userId: string }) => {
+  console.log('Title', title);
   return (
     <section className="book-overview">
       <div className="flex flex-1 flex-col gap-5">
