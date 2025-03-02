@@ -15,6 +15,13 @@
       "when": 1740883958474,
       "tag": "0001_organic_rafael_vega",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740888079689,
+      "tag": "0002_quick_avengers",
+      "breakpoints": true
     }
   ]
 }

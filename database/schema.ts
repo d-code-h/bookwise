@@ -1,4 +1,5 @@
 import {
+  boolean,
   date,
   integer,
   numeric,
@@ -51,6 +52,7 @@ export const books = pgTable('books', {
   videoUrl: text('video_url').notNull(),
   summary: varchar('summary').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  isLoanedBook: boolean('is_loaned_book').default(false),
 });
 
 export const borrowRecords = pgTable('borrow_records', {

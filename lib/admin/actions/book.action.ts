@@ -11,6 +11,7 @@ export const createBook = async (params: BookParams) => {
       .values({
         ...params,
         availableCopies: params.totalCopies,
+        isLoanedBook: false,
       })
       .returning();
 
