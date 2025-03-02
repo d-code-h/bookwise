@@ -46,7 +46,7 @@ const BorrowBook = ({
           position: 'top-center',
         });
 
-        router.push('/my-profile');
+        router.push('/');
       } else {
         toast.error('Error', {
           description: result.error,
