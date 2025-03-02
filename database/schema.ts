@@ -1,6 +1,7 @@
 import {
   date,
   integer,
+  numeric,
   pgEnum,
   pgTable,
   text,
@@ -41,7 +42,7 @@ export const books = pgTable('books', {
   title: varchar('title', { length: 255 }).notNull(),
   author: varchar('author', { length: 255 }).notNull(),
   genre: text('genre').notNull(),
-  rating: integer('rating').notNull(),
+  rating: numeric('rating', { precision: 2, scale: 1 }).notNull(),
   coverUrl: text('cover_url').notNull(),
   coverColor: varchar('cover_color', { length: 7 }).notNull(),
   description: text('description').notNull(),
