@@ -20,6 +20,8 @@ import { Book } from '@/types';
 import { bookSchema } from '@/lib/validations';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import FileUpload from '@/components/FileUpload';
+import ColorPicker from '../ColorPicker';
 
 interface Props extends Partial<Book> {
   type: 'create' | 'update';
@@ -43,7 +45,9 @@ const BookForm = ({ type, ...books }: Props) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof bookSchema>) => {};
+  const onSubmit = async (values: z.infer<typeof bookSchema>) => {
+    console.log(values);
+  };
 
   return (
     <Form {...form}>
@@ -172,7 +176,17 @@ const BookForm = ({ type, ...books }: Props) => {
               <FormLabel className="text-base font-normal text-dark-500">
                 Book Image
               </FormLabel>
-              <FormControl></FormControl>
+              <FormControl>
+                <FileUpload
+                  type="image"
+                  accept="image/*"
+                  placeholder="Upload a book cover"
+                  folder="books/covers"
+                  variant="light"
+                  value={field.value}
+                  onFileChange={field.onChange}
+                />
+              </FormControl>
 
               <FormMessage />
             </FormItem>
@@ -187,7 +201,12 @@ const BookForm = ({ type, ...books }: Props) => {
               <FormLabel className="text-base font-normal text-dark-500">
                 Primary Color
               </FormLabel>
-              <FormControl></FormControl>
+              <FormControl>
+                <ColorPicker
+                  value={field.value}
+                  onPickerChange={field.onChange}
+                />
+              </FormControl>
 
               <FormMessage />
             </FormItem>
@@ -224,7 +243,17 @@ const BookForm = ({ type, ...books }: Props) => {
               <FormLabel className="text-base font-normal text-dark-500">
                 Book Trailer
               </FormLabel>
-              <FormControl></FormControl>
+              <FormControl>
+                <FileUpload
+                  type="video"
+                  accept="video/*"
+                  placeholder="Upload a book trailer"
+                  folder="books/videos"
+                  variant="light"
+                  value={field.value}
+                  onFileChange={field.onChange}
+                />
+              </FormControl>
 
               <FormMessage />
             </FormItem>
