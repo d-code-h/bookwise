@@ -38,7 +38,7 @@ const BookForm = ({ type, ...books }: Props) => {
       description: '',
       author: '',
       genre: '',
-      rating: 1,
+      rating: 1.0,
       totalCopies: 1,
       coverUrl: '',
       coverColor: '',
@@ -48,7 +48,7 @@ const BookForm = ({ type, ...books }: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-    const result = await createBook(values);
+    const result = await createBook({ ...values });
 
     if (result.success) {
       toast.success('Success', {
@@ -147,9 +147,10 @@ const BookForm = ({ type, ...books }: Props) => {
                 <Input
                   required
                   type="number"
+                  step="0.1"
                   min={1}
                   max={5}
-                  placeholder="Book rating"
+                  placeholder="Book rating (e.g., 4.5)"
                   {...field}
                   className="book-form_input"
                 />

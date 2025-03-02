@@ -1,1 +1,0 @@
-ALTER TABLE "books" ADD COLUMN "is_loaned_book" boolean DEFAULT false;

@@ -1,5 +1,5 @@
 {
-  "id": "bf0538a5-23ea-44b2-95ba-b3ee58cce6b4",
+  "id": "3a24b69f-9568-4f95-a8f3-267a077bd246",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -35,7 +35,7 @@
         },
         "rating": {
           "name": "rating",
-          "type": "integer",
+          "type": "numeric(2, 1)",
           "primaryKey": false,
           "notNull": true
         },
@@ -89,6 +89,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "is_loaned_book": {
+          "name": "is_loaned_book",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},

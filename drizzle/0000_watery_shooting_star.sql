@@ -6,7 +6,7 @@ CREATE TABLE "books" (
 	"title" varchar(255) NOT NULL,
 	"author" varchar(255) NOT NULL,
 	"genre" text NOT NULL,
-	"rating" integer NOT NULL,
+	"rating" numeric(2, 1) NOT NULL,
 	"cover_url" text NOT NULL,
 	"cover_color" varchar(7) NOT NULL,
 	"description" text NOT NULL,
@@ -15,6 +15,7 @@ CREATE TABLE "books" (
 	"video_url" text NOT NULL,
 	"summary" varchar NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
+	"is_loaned_book" boolean DEFAULT false,
 	CONSTRAINT "books_ id_unique" UNIQUE(" id")
 );
 --> statement-breakpoint
