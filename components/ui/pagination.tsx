@@ -35,32 +35,38 @@ const PaginationItem = React.forwardRef<
 ));
 PaginationItem.displayName = 'PaginationItem';
 
-type PaginationLinkProps = {
+type PaginationLinkProps<T extends React.ElementType> = {
   isActive?: boolean;
-  href: string;
-} & Pick<ButtonProps, 'size'> &
-  React.ComponentProps<'a'>;
+  href?: string;
+  as?: T; // Default to 'a', but can be 'button'
+} & ButtonProps &
+  React.ComponentPropsWithoutRef<T>; // Ensure correct props for given element
 
-const PaginationLink = ({
+const PaginationLink = <T extends React.ElementType = 'a'>({
   className,
   isActive,
   size = 'icon',
   href,
+  as,
   ...props
-}: PaginationLinkProps) => (
-  <Link
-    href={href}
-    aria-current={isActive ? 'page' : undefined}
-    className={cn(
-      buttonVariants({
-        variant: isActive ? 'outline' : 'ghost',
-        size,
-      }),
-      className,
-    )}
-    {...props}
-  />
-);
+}: PaginationLinkProps<T>) => {
+  const Component = as || (href ? Link : 'a'); // Default to Link if href is provided, otherwise 'a'
+
+  return (
+    <Component
+      {...(Component === Link ? { href } : {})} // Only pass `href` for Link elements
+      aria-current={isActive ? 'page' : undefined}
+      className={cn(
+        buttonVariants({
+          variant: isActive ? 'outline' : 'ghost',
+          size,
+        }),
+        className,
+      )}
+      {...props}
+    />
+  );
+};
 
 PaginationLink.displayName = 'PaginationLink';
 

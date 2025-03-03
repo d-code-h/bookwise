@@ -1,87 +1,123 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+'use client';
 
-import BookList from '@/components/BookList';
-import { db } from '@/database/drizzle';
-import { books } from '@/database/schema';
-import React from 'react';
-import { desc } from 'drizzle-orm';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Book } from '@/types';
-import { cn } from '@/lib/utils';
+import { useRouter, useSearchParams } from 'next/navigation';
+import SearchFilter from '@/components/SearchFilter';
+import BookCard from '@/components/BookCard';
+import Loader from '@/components/Loader';
+import SearchHeader from '@/components/SearchHeader';
+import BookPagination from '@/components/Pagination';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
-const Search = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) => {
-  const currentPage = Number((await searchParams).page) || 1;
-  const pageSize = 10;
-  const offset = (currentPage - 1) * pageSize;
+const Search = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  // Fetch total book count for pagination
-  const totalBooks = await db.select({ count: books.id }).from(books);
-  const totalCount = totalBooks.length;
-  const numberOfPages = Math.ceil(totalCount / pageSize);
+  // States for books, pagination, genre, and search
+  const [books, setBooks] = useState<Book[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [genre, setGenre] = useState(searchParams.get('genre') || 'All');
+  const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch paginated books
-  const allBooks = (await db
-    .select()
-    .from(books)
-    .orderBy(desc(books.createdAt))
-    .limit(10)
-    .offset(offset)) as Book[];
+  // Fetch books when search, genre, or page changes
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoading(true);
+      const result = await fetch(
+        `/api/books?search=${search}&genre=${genre}&page=${page}`,
+      );
+      const data = await result.json();
+
+      setBooks(data.books);
+      setTotalPages(data.totalPages);
+      setLoading(false);
+    };
+
+    fetchBooks();
+  }, [search, genre, page]);
+
+  // Handle search input (debounced)
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+    setPage(1);
+    router.push(`?search=${value}&genre=${genre}&page=1`);
+  };
+
+  // Handle genre selection
+  const handleGenreChange = (value: string) => {
+    setGenre(value);
+    setPage(1);
+    router.push(`?search=${search}&genre=${value}&page=1`);
+  };
 
   return (
     <>
-      <BookList title="Search Results" books={allBooks} />
+      {/* Search Bar */}
+      <SearchHeader value={search} onChange={handleSearchChange} />
 
-      <Pagination className="text-white">
-        <PaginationContent className="ml-auto">
-          {/* Previous Button */}
-          {currentPage > 1 && (
-            <PaginationItem>
-              <PaginationPrevious
-                className="p-3.5 bg-dark-300 text-white rounded-sm hover:bg-primary/75"
-                href={`?page=${currentPage - 1}`}
-              />
-            </PaginationItem>
-          )}
+      <div>
+        <section className="flex justify-between">
+          <h2 className="font-bebas-neue text-4xl text-light-100">
+            {search ? (
+              <span>
+                Search result for <span className="text-primary">{search}</span>
+              </span>
+            ) : (
+              <span>Search Results</span>
+            )}
+          </h2>
 
-          {/* Page Numbers */}
-          {Array.from({ length: numberOfPages }, (_, index) => index + 1).map(
-            (page) => (
-              <PaginationItem key={page}>
-                <PaginationLink
-                  href={`?page=${page}`}
-                  isActive={page === currentPage}
-                  className={cn(
-                    'p-3.5 bg-dark-300 text-white rounded-sm hover:bg-primary/75',
-                    page === currentPage && 'bg-primary text-dark-300',
-                  )}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ),
-          )}
+          {/* Genre Filter */}
+          <SearchFilter value={genre} onChange={handleGenreChange} />
+        </section>
 
-          {/* Next Button */}
-          {currentPage < numberOfPages && (
-            <PaginationItem>
-              <PaginationNext
-                className="p-3.5 bg-dark-300 text-white rounded-sm hover:bg-primary/75"
-                href={`?page=${currentPage + 1}`}
-              />
-            </PaginationItem>
-          )}
-        </PaginationContent>
-      </Pagination>
+        {loading ? (
+          <Loader />
+        ) : books.length > 0 ? (
+          <ul className="book-list">
+            {books.map((book) => (
+              <BookCard key={book.title} {...book} />
+            ))}
+          </ul>
+        ) : (
+          <div className="w-full md:w-1/3 mx-auto text-center space-y-6 mt-16">
+            <Image
+              src="/icons/book-not-found.svg"
+              alt="book not found"
+              width={200}
+              height={200}
+              className="mx-auto"
+            />
+
+            <section className="text-white text-base space-y-3.5">
+              <h4 className="text-base font-semibold">No Results Found</h4>
+              <p className="text-xs text-light-100">
+                We couldn&apos;t find any books matching your search. Try using
+                different keywords or check for typos.
+              </p>
+            </section>
+            <Button
+              className="bg-primary text-dark-300 w-full uppercase py-5 px-3.5"
+              onClick={() => setSearch('')}
+            >
+              Clear Search
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <BookPagination
+        search={search}
+        genre={genre}
+        totalPages={totalPages}
+        page={page}
+        setPage={setPage}
+      />
     </>
   );
 };
