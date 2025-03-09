@@ -106,6 +106,7 @@ export default {
       },
       backgroundImage: {
         pattern: "url('/images/pattern.webp')",
+        'gradient-custom': 'linear-gradient(180deg, #232839 0%, #12141D 100%)',
       },
     },
   },
