@@ -12,7 +12,7 @@ const UserProfile = ({
   role,
 }: User) => {
   return (
-    <div className="space-y-9 p-10 pt-24 bg-gradient-custom rounded-[20px] relative">
+    <div className="space-y-9 min-w-[400px] max-w-[700px] h-fit p-10 pt-24 bg-gradient-custom rounded-[20px] relative">
       <Image
         src="/icons/clip.svg"
         alt="clip"
@@ -21,12 +21,13 @@ const UserProfile = ({
         className="absolute -top-4 left-1/2 -translate-x-1/2"
       />
       <div className="space-y-8">
-        <div className="flex flex-row gap-7 items-center text-light-100">
+        <div className="flex flex-col md:flex-row gap-7 items-center text-light-100">
           <Image
             src="/images/profile.svg"
             alt="profile"
             width={99}
             height={99}
+            className=""
           />
           <div className="space-y-2.5">
             <div className="flex gap-0.5">

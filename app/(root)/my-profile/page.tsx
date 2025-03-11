@@ -1,10 +1,8 @@
 import { auth } from '@/auth';
-import BookList from '@/components/BookList';
 import BorrowedBooksList from '@/components/BorrowedBooksList';
 import UserProfile from '@/components/UserProfile';
 import { db } from '@/database/drizzle';
 import { users } from '@/database/schema';
-import { User } from '@/types';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -30,13 +28,13 @@ const MyProfile = async () => {
   if (!userInfo) redirect('/');
 
   return (
-    <>
+    <div className="flex flex-col md:pt-10 md:flex-row gap-8 md:gap-20">
       {/* User Profile */}
       <UserProfile {...userInfo} />
 
       {/* Borrowed books */}
       <BorrowedBooksList />
-    </>
+    </div>
   );
 };
 

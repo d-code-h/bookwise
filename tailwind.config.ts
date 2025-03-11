@@ -67,6 +67,7 @@ export default {
           400: '#F46F70',
           500: '#E27233',
           800: '#EF3A4B',
+          overdue: '#FF6C6F',
         },
         blue: {
           100: '#0089F1',
@@ -107,6 +108,7 @@ export default {
       backgroundImage: {
         pattern: "url('/images/pattern.webp')",
         'gradient-custom': 'linear-gradient(180deg, #232839 0%, #12141D 100%)',
+        'card-gradient': 'linear-gradient(180deg, #12141D 0%, #12151F 100%)',
       },
     },
   },
