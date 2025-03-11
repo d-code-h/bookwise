@@ -1,4 +1,5 @@
 export interface Book {
+  key?: string;
   id: string;
   title: string;
   author: string;
@@ -45,4 +46,13 @@ export interface BookParams {
 export interface BorrowBookParams {
   bookId: string;
   userId: string;
+}
+
+export interface User {
+  fullName: string;
+  email: string;
+  universityId: number;
+  universityCard: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | null;
+  role: 'USER' | 'ADMIN' | null;
 }
