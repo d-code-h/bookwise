@@ -1,9 +1,13 @@
 import { db } from '@/database/drizzle';
 import { books } from '@/database/schema';
 import { eq, and, ilike, desc, sql } from 'drizzle-orm';
-import { NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest } from 'next/server';
 
-export const GET = async (req: Request, res: Response) => {
+export const GET = async (req: NextRequest, res: NextApiResponse) => {
+  if (!req.url) {
+    return res.status(400).json({ error: 'Invalid request URL' });
+  }
   const { searchParams } = new URL(req.url);
 
   const search = searchParams.get('search') || '';
@@ -32,7 +36,7 @@ export const GET = async (req: Request, res: Response) => {
     .from(books)
     .where(conditions.length > 0 ? and(...conditions) : undefined);
 
-  return NextResponse.json({
+  return res.status(200).json({
     books: filteredBooks,
     totalPages: Math.ceil(count / pageSize),
   });
