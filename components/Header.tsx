@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
-import { logout } from '@/lib/actions/auth.action';
+import Logout from './Logout';
 
 const Header = ({ session }: { session: Session }) => {
   const pathname = usePathname();
@@ -20,13 +20,13 @@ const Header = ({ session }: { session: Session }) => {
       <ul className="flex flex-row items-center gap-8">
         <li>
           <Link
-            href="/library"
+            href="/admin"
             className={cn(
               'text-base cursor-pointer capitalize',
-              pathname === '/library' ? 'text-light-200' : 'text-light-100',
+              pathname === '/admin' ? 'text-light-200' : 'text-light-100',
             )}
           >
-            Library
+            Admin
           </Link>
         </li>
         <li>
@@ -56,20 +56,7 @@ const Header = ({ session }: { session: Session }) => {
           </Link>
         </li>
         <li>
-          <form
-            action={async () => {
-              await logout();
-            }}
-          >
-            <button type="submit" className="flex items-center justify-center">
-              <Image
-                src="/icons/logout.svg"
-                alt="search"
-                width={20}
-                height={20}
-              />
-            </button>
-          </form>
+          <Logout />
         </li>
       </ul>
     </header>

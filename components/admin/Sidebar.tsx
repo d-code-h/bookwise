@@ -8,11 +8,12 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Session } from 'next-auth';
+import Logout from '../Logout';
 
 const Sidebar = ({ session }: { session: Session }) => {
   const pathname = usePathname();
   return (
-    <div className="admin-sidebar">
+    <div className="admin-sidebar overflow-auto scrollbar-thin  scrollbar-track-gray-200 scrollbar-thumb-primary-admin">
       <div>
         <div className="logo">
           <Image
@@ -70,6 +71,7 @@ const Sidebar = ({ session }: { session: Session }) => {
           <p className="font-semibold text-dark-200">{session?.user?.name}</p>
           <p className="text-light-500 text-xs">{session?.user?.email}</p>
         </div>
+        <Logout />
       </div>
     </div>
   );

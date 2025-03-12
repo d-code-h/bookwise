@@ -1,23 +1,25 @@
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import TableWrapper from '@/components/admin/TableWrapper';
+import { db } from '@/database/drizzle';
+import { books } from '@/database/schema';
 import React from 'react';
 
-const Books = () => {
-  return (
-    <section className="w-full rounded-2xl bg-white p-7">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-semibold">All Books</h2>
-        <Button className="bg-primary-admin" asChild>
-          <Link href="/admin/books/new" className="text-white">
-            + Create a New Book
-          </Link>
-        </Button>
-      </div>
-      <div className="mt-2 w-full overflow-hidden">
-        <p>Table</p>
-      </div>
-    </section>
-  );
+const Books = async () => {
+  // Fetch all books from DB
+  const allBooks = await db
+    .select({
+      id: books.id,
+      info: {
+        title: books.title,
+        coverUrl: books.coverUrl,
+        coverColor: books.coverColor,
+      },
+      author: books.author,
+      genre: books.genre,
+
+      createdAt: books.createdAt,
+    })
+    .from(books);
+  return <TableWrapper books={allBooks} />;
 };
 
 export default Books;
