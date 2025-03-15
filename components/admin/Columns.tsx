@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Book } from '@/types';
 import BookCover from '../BookCover';
+import Image from 'next/image';
 
 interface RowProps {
   title: string;
@@ -52,14 +53,13 @@ export const columns: ColumnDef<Book>[] = [
   },
   {
     header: 'Action',
-    // cell: ({ row }) => {
-    //   const date = new Date(row.getValue('createdAt'));
-    //   const formattedDate = date.toLocaleDateString('en-US', {
-    //     year: 'numeric',
-    //     month: 'short',
-    //     day: 'numeric',
-    //   });
-    //   return <div>{formattedDate}</div>;
-    // },
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-4 justify-center items-center">
+          <Image src="/icons/edit.svg" alt="Edit" width={20} height={20} />
+          <Image src="/icons/trash.svg" alt="Edit" width={20} height={20} />
+        </div>
+      );
+    },
   },
 ];

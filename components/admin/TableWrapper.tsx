@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { DataTable } from './DataTable';
 import {
   getCoreRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
@@ -26,6 +27,7 @@ const TableWrapper = ({ books }: TableProps) => {
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     state: {
       sorting,
     },
@@ -47,6 +49,24 @@ const TableWrapper = ({ books }: TableProps) => {
       </div>
       <div className="w-full overflow-hidden">
         <DataTable table={table} columns={columns} data={books} />
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </section>
   );
