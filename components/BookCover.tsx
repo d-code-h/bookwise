@@ -21,6 +21,8 @@ interface Props {
   className?: string;
   coverColor: string;
   coverImage: string;
+  width?: boolean;
+  height?: boolean;
 }
 
 const BookCover = ({
@@ -28,13 +30,17 @@ const BookCover = ({
   className,
   coverColor = '#012B48',
   coverImage = 'https://placehold.co/400x600.png',
+  width,
+  height,
 }: Props) => {
   return (
     <div
       className={cn(
-        'relative transition-all duration-300',
+        'relative transition-all duration-300 ',
         variantStyles[variant],
         className,
+        width && 'w-7',
+        height && 'h-10',
       )}
     >
       <BookCoverSvg coverColor={coverColor} />

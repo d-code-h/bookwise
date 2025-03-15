@@ -1,18 +1,21 @@
 import { Session } from 'next-auth';
 import React from 'react';
+import Search from './Search';
 
 const Header = ({ session }: { session: Session }) => {
   return (
-    <header className="admin-header">
+    <header className="admin-header items-center">
       <div>
-        <h2 className="text-2xl font-semibold text-dark-400">
+        <h2 className="text-2xl font-semibold text-dark-">
           {session?.user?.name}
         </h2>
         <p className="text-base text-slate-500">
           Monitor all of your users and books here
         </p>
       </div>
-      <p>Search</p>
+
+      {/* Search bar */}
+      <Search />
     </header>
   );
 };

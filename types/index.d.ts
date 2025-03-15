@@ -1,19 +1,29 @@
-export interface Book {
+interface BookBase {
   key?: string;
   id: string;
-  title: string;
   author: string;
   genre: string;
   rating: number;
   totalCopies: number;
   availableCopies: number;
   description: string;
-  coverColor: string;
-  coverUrl: string;
   videoUrl: string;
   summary: string;
   createdAt: Date | null;
   isLoanedBook: boolean | null;
+}
+export interface Book extends BookBase {
+  title: string;
+  coverColor: string;
+  coverUrl: string;
+}
+
+export interface TableBook extends BookBase {
+  info: {
+    title: string;
+    coverColor: string;
+    coverUrl: string;
+  };
 }
 
 export interface BookListProps {

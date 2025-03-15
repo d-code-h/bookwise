@@ -16,7 +16,7 @@ const BookCard = ({
   isLoanedBook = false,
 }: Book) => {
   return (
-    <li key={key || ''} className={cn(isLoanedBook && 'xs:w-52 w-full')}>
+    <li className={cn(isLoanedBook && 'xs:w-52 w-full')}>
       <Link
         href={`/books/${id}`}
         className={cn(isLoanedBook && 'w-full flex flex-col items-center')}
