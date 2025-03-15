@@ -3,10 +3,10 @@ import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 import '@/styles/admin.css';
 import Sidebar from '@/components/admin/Sidebar';
-import Header from '@/components/admin/Header';
 import { db } from '@/database/drizzle';
 import { users } from '@/database/schema';
 import { eq } from 'drizzle-orm';
+import Header from '@/components/admin/Header';
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();

@@ -1,5 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useMemo, useState } from 'react';
 import ColumnSorter from './ColumnSorter';
 import { Button } from '../ui/button';
 import Link from 'next/link';
@@ -12,17 +13,28 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { columns } from './Columns';
-import { Book } from '@/types';
+import { TableBook } from '@/types';
+import { useSearchStore } from '@/store/searchStore';
 
 interface TableProps {
-  books: Book[];
+  books: TableBook[];
 }
 
 const TableWrapper = ({ books }: TableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const query = useSearchStore((state) => state.query);
+
+  // Filter books based on the query
+  const filteredBooks = useMemo(() => {
+    return books.filter((book) =>
+      `${book.info.title} ${book.author} ${book.genre}`
+        .toLowerCase()
+        .includes(query?.toLowerCase()),
+    );
+  }, [books, query]);
 
   const table = useReactTable({
-    data: books,
+    data: filteredBooks, // Use filtered books
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -49,24 +61,26 @@ const TableWrapper = ({ books }: TableProps) => {
       </div>
       <div className="w-full overflow-hidden">
         <DataTable table={table} columns={columns} data={books} />
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
+        {filteredBooks.length > 10 && (
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

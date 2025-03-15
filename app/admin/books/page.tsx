@@ -1,11 +1,12 @@
 import TableWrapper from '@/components/admin/TableWrapper';
 import { db } from '@/database/drizzle';
 import { books } from '@/database/schema';
+import { TableBook } from '@/types';
 import React from 'react';
 
 const Books = async () => {
   // Fetch all books from DB
-  const allBooks = await db
+  const allBooks = (await db
     .select({
       id: books.id,
       info: {
@@ -18,7 +19,7 @@ const Books = async () => {
 
       createdAt: books.createdAt,
     })
-    .from(books);
+    .from(books)) as TableBook[];
   return <TableWrapper books={allBooks} />;
 };
 

@@ -16,6 +16,26 @@ export interface Book {
   isLoanedBook: boolean | null;
 }
 
+export interface TableBook {
+  key?: string;
+  id: string;
+  info: {
+    title: string;
+    coverColor: string;
+    coverUrl: string;
+  };
+  author: string;
+  genre: string;
+  rating: number;
+  totalCopies: number;
+  availableCopies: number;
+  description: string;
+  videoUrl: string;
+  summary: string;
+  createdAt: Date | null;
+  isLoanedBook: boolean | null;
+}
+
 export interface BookListProps {
   title: string;
   books: Book[];

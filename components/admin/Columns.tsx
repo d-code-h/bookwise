@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { Book } from '@/types';
+import { TableBook } from '@/types';
 import BookCover from '../BookCover';
 import Image from 'next/image';
 
@@ -11,7 +11,7 @@ interface RowProps {
   coverColor: string;
 }
 
-export const columns: ColumnDef<Book>[] = [
+export const columns: ColumnDef<TableBook>[] = [
   {
     accessorKey: 'info',
     header: 'Book Title',
@@ -56,8 +56,18 @@ export const columns: ColumnDef<Book>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-4 justify-center items-center">
-          <Image src="/icons/edit.svg" alt="Edit" width={20} height={20} />
-          <Image src="/icons/trash.svg" alt="Edit" width={20} height={20} />
+          <Image
+            src="/icons/admin/edit.svg"
+            alt="Edit"
+            width={20}
+            height={20}
+          />
+          <Image
+            src="/icons/admin/trash.svg"
+            alt="Edit"
+            width={20}
+            height={20}
+          />
         </div>
       );
     },
