@@ -14,24 +14,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { TableBook, TableUser } from '@/types';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends TableBook | TableUser, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
   table: TableType<TData>;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends TableBook | TableUser, TValue>({
   columns,
   table,
 }: DataTableProps<TData, TValue>) {
   return (
-    <div className="rounded-md overflow-x-auto scrollbar-thin  scrollbar-track-gray-200 scrollbar-thumb-primary-admin">
+    <div className="rounded-md">
       <Table>
-        <TableHeader className="bg-light-300 text-dark-300 text-sm tracking-tight ">
+        <TableHeader className="bg-light-300 text-dark-300 text-sm tracking-tight">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow className="border-none" key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
+                if (header.column.id === 'id') {
+                  return null;
+                }
                 return (
                   <TableHead key={header.id} className="px-2.5 py-4">
                     {header.isPlaceholder
@@ -50,15 +53,23 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="border-light-300 font-medium text-sm"
+                className="border-light-300 font-medium text-sm "
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="px-2.5 py-4">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  if (cell.column.id === 'id') {
+                    return null;
+                  }
+                  return (
+                    <TableCell key={cell.id} className="px-2.5 py-4">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))
           ) : (
