@@ -8,9 +8,9 @@ import { useSearchStore } from '@/store/searchStore';
 const Search = () => {
   const setQuery = useSearchStore((state) => state.setQuery);
   return (
-    <div className="relative">
+    <div className="relative w-full md:w-[450px]">
       <Input
-        className="min-w-[350px] ps-12 pe-3.5 py-4 border-gray-100 text-slate-500 text-base rounded-md focus:border-primary-admin transition-all duration-75 h-12"
+        className="ps-12 pe-3.5 py-4 border-gray-100 text-slate-500 text-base rounded-md focus:border-primary-admin transition-all duration-75 h-12"
         placeholder="Search users, books by title, author, or genre"
         onChange={(e) => setQuery(e.target.value)}
       />

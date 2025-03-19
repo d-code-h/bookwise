@@ -16,8 +16,6 @@ const BorrowedBooksList = async () => {
     .innerJoin(books, eq(borrowRecords.bookId, books.id))
     .where(eq(borrowRecords.userId, session.user.id));
 
-  console.log(borrowedBooks);
-
   if (borrowedBooks.length < 1) return;
   return (
     <div>

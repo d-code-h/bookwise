@@ -1,19 +1,19 @@
 'use client';
 
 import { adminSideBarLinks } from '@/constants';
-import { cn, getInitials } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Session } from 'next-auth';
 import Logout from '../Logout';
+import UserAvatar from './UserAvatar';
 
 const Sidebar = ({ session }: { session: Session }) => {
   const pathname = usePathname();
   return (
-    <div className="admin-sidebar overflow-auto scrollbar-thin  scrollbar-track-gray-200 scrollbar-thumb-primary-admin">
+    <div className="admin-sidebar overflow-auto scrollbar-thin scrollbar-thumb-primary-admin scrollbar-track-gray-200">
       <div>
         <div className="logo">
           <Image
@@ -60,12 +60,8 @@ const Sidebar = ({ session }: { session: Session }) => {
         </div>
       </div>
 
-      <div className="user">
-        <Avatar>
-          <AvatarFallback className="bg-amber-100 font-semibold">
-            {getInitials(session?.user?.name || 'IN')}
-          </AvatarFallback>
-        </Avatar>
+      <div className="user flex-wrap justify-center items-center">
+        <UserAvatar name={session?.user?.name as string} />
 
         <div className="flex flex-col max-md:hidden">
           <p className="font-semibold text-dark-200">{session?.user?.name}</p>

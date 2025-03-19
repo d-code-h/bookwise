@@ -6,36 +6,45 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { DataTable } from './DataTable';
 import {
+  ColumnDef,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import { columns } from './Columns';
-import { TableBook } from '@/types';
+import { booksColumns, usersColumns } from './Columns';
+import { TableBook, TableUser } from '@/types';
 import { useSearchStore } from '@/store/searchStore';
-
-interface TableProps {
-  books: TableBook[];
+interface TableProps<T> {
+  data: T[];
+  type: 'Books' | 'Users';
 }
 
-const TableWrapper = ({ books }: TableProps) => {
+const TableWrapper = <T extends TableBook | TableUser>({
+  data,
+  type,
+}: TableProps<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const query = useSearchStore((state) => state.query);
 
   // Filter books based on the query
-  const filteredBooks = useMemo(() => {
-    return books.filter((book) =>
-      `${book.info.title} ${book.author} ${book.genre}`
-        .toLowerCase()
-        .includes(query?.toLowerCase()),
-    );
-  }, [books, query]);
+  const filteredData = useMemo(() => {
+    return data.filter((each) => {
+      const params =
+        type === 'Users'
+          ? `${(each as TableUser).info.name} ${(each as TableUser).info.email}`
+          : `${(each as TableBook).info.title} ${(each as TableBook).author} ${(each as TableBook).genre}`;
+      return params.toLowerCase().includes(query?.toLowerCase());
+    });
+  }, [data, query]);
 
   const table = useReactTable({
-    data: filteredBooks, // Use filtered books
-    columns,
+    data: filteredData, // Use filtered books
+    columns: (type === 'Users' ? usersColumns : booksColumns) as ColumnDef<
+      T,
+      any
+    >[],
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -48,21 +57,26 @@ const TableWrapper = ({ books }: TableProps) => {
   return (
     <section className="w-full rounded-2xl bg-white p-7">
       <div className="flex flex-wrap items-center justify-between mb-5 gap-2">
-        <h2 className="text-xl font-semibold">All Books</h2>
+        <h2 className="text-xl font-semibold">
+          <span>All </span>
+          {type}
+        </h2>
 
         <div className="space-x-5">
           <ColumnSorter table={table} />
-          <Button className="bg-primary-admin" asChild>
-            <Link href="/admin/books/new" className="text-white">
-              + Create a New Book
-            </Link>
-          </Button>
+          {type === 'Books' && (
+            <Button className="bg-primary-admin" asChild>
+              <Link href="/admin/books/new" className="text-white">
+                + Create a New Book
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
-      <div className="w-full overflow-hidden">
-        <DataTable table={table} columns={columns} data={books} />
-        {filteredBooks.length > 10 && (
-          <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="w-full">
+        <DataTable table={table} columns={table.getAllColumns()} />
+        {filteredData.length > 10 && (
+          <div className="flex items-center justify-end space-x-2 py-4 ">
             <Button
               variant="outline"
               size="sm"

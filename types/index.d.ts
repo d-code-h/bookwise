@@ -58,6 +58,20 @@ export interface BorrowBookParams {
   userId: string;
 }
 
+export interface TableUser {
+  id: string;
+  info: {
+    name: string;
+    email: string;
+  };
+  universityId: number;
+  universityCard: string;
+  role: 'USER' | 'ADMIN';
+  universityCard: string;
+  dateJoined: Date;
+  booksBorrowed: number;
+}
+
 export interface User {
   fullName: string;
   email: string;

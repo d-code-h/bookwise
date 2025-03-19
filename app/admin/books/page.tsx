@@ -20,7 +20,8 @@ const Books = async () => {
       createdAt: books.createdAt,
     })
     .from(books)) as TableBook[];
-  return <TableWrapper books={allBooks} />;
+
+  return <TableWrapper data={allBooks} type="Books" />;
 };
 
 export default Books;
