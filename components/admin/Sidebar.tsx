@@ -60,7 +60,7 @@ const Sidebar = ({ session }: { session: Session }) => {
         </div>
       </div>
 
-      <div className="user items-center">
+      <div className="user flex-wrap justify-center items-center">
         <UserAvatar name={session?.user?.name as string} />
 
         <div className="flex flex-col max-md:hidden">
