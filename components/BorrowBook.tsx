@@ -22,7 +22,7 @@ const BorrowBook = ({
   borrowingEligibility: { isEligible, message },
 }: Props) => {
   const router = useRouter();
-  const [borrowing, setBorrowing] = useState(false);
+  const [borrowing, setBorrowing] = useState(!isEligible);
 
   const handleBorrowBook = async () => {
     if (!isEligible) {

@@ -4,8 +4,8 @@ import BookCover from './BookCover';
 import { Book } from '@/types';
 import BorrowBook from './BorrowBook';
 import { db } from '@/database/drizzle';
-import { eq } from 'drizzle-orm';
-import { users } from '@/database/schema';
+import { and, eq } from 'drizzle-orm';
+import { borrowRecords, users } from '@/database/schema';
 
 interface Props extends Book {
   userId: string;
@@ -32,8 +32,18 @@ const BookOverview = async ({
 
   if (!user) return null;
 
+  const isBorrowedBook = await db
+    .select()
+    .from(borrowRecords)
+
+    .where(and(eq(borrowRecords.userId, userId), eq(borrowRecords.bookId, id))) // Only current book
+    .limit(1);
+
   const borrowingEligibility = {
-    isEligible: availableCopies > 0 && user.status === 'APPROVED',
+    isEligible:
+      availableCopies > 0 &&
+      user.status === 'APPROVED' &&
+      isBorrowedBook.length === 0,
     message:
       availableCopies <= 0
         ? 'Book is not available'
