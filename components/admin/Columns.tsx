@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { TableBook, TableUser } from '@/types';
+import { AccountRequests, TableBook, TableUser } from '@/types';
 import BookCover from '../BookCover';
 import Image from 'next/image';
 import { dateConverter } from '@/lib/utils';
@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
+import { Button } from '../ui/button';
 
 interface RowProps {
   title: string;
@@ -233,6 +234,92 @@ export const usersColumns: ColumnDef<TableUser>[] = [
           <Image
             src="/icons/admin/trash.svg"
             alt="Edit"
+            width={20}
+            height={20}
+          />
+        </div>
+      );
+    },
+  },
+];
+export const AccountsColumns: ColumnDef<AccountRequests>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'info',
+    header: 'Name',
+    cell: ({ row }) => {
+      const {
+        name,
+        email,
+      }: {
+        name: string;
+        email: string;
+      } = row.getValue('info');
+      return (
+        <div className="flex flex-row gap-2 items-center">
+          <UserAvatar name={name as string} />
+
+          <div className="text-sm flex flex-col">
+            <h5 className="font-semibold">{name}</h5>
+            <p className="text-[#64748B]">{email}</p>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'dateJoined',
+    header: 'Date Joined',
+    cell: ({ row }) => {
+      const date = row.getValue('dateJoined') as Date;
+      return <div>{dateConverter(date)}</div>;
+    },
+  },
+
+  {
+    accessorKey: 'universityId',
+    header: 'University ID No',
+  },
+  {
+    accessorKey: 'universityCard',
+    header: 'University ID Card',
+    cell: ({ row }) => {
+      const cardUrl = row.getValue('universityCard') as string;
+
+      return (
+        <a
+          className="flex flex-row flex-wrap gap-1.5"
+          href={`${urlEndpoint}${cardUrl}`}
+          target="_blank"
+        >
+          <span className="text-blue-100 text-sm font-medium">
+            View ID Card
+          </span>
+          <Image
+            src="/icons/admin/external.svg"
+            alt="id card"
+            width={14}
+            height={14}
+          />
+        </a>
+      );
+    },
+  },
+
+  {
+    header: 'Actions',
+    cell: () => {
+      return (
+        <div className="flex gap-5">
+          <Button className="px-2 py-3 text-green bg-green-100 rounded-md shadow-none">
+            Approve Account
+          </Button>
+          <Image
+            src="/icons/admin/cancel.svg"
+            alt="Cancel"
             width={20}
             height={20}
           />

@@ -5,7 +5,13 @@ import { Button } from '../ui/button';
 import { ArrowUpDown } from 'lucide-react';
 import { Table } from '@tanstack/react-table';
 
-const ColumnSorter = <TData,>({ table }: { table: Table<TData> }) => {
+const ColumnSorter = <TData,>({
+  table,
+  type,
+}: {
+  type: 'Books' | 'Users' | 'AccountRequests';
+  table: Table<TData>;
+}) => {
   // Get the "title" column from the table
   const column = table.getColumn('info');
 
@@ -15,7 +21,7 @@ const ColumnSorter = <TData,>({ table }: { table: Table<TData> }) => {
       variant="ghost"
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >
-      A-z
+      {type === 'AccountRequests' ? 'Oldest to Recent' : 'A-z'}
       <ArrowUpDown className="ml-2 h-4 w-4" />
     </Button>
   );

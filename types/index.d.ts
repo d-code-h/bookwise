@@ -71,6 +71,18 @@ export interface TableUser {
   dateJoined: Date;
   booksBorrowed: number;
 }
+export interface AccountRequests {
+  id: string;
+  info: {
+    name: string;
+    email: string;
+  };
+  universityId: number;
+  universityCard: string;
+  role: 'USER' | 'ADMIN';
+  universityCard: string;
+  dateJoined: Date;
+}
 
 export interface User {
   fullName: string;
