@@ -10,7 +10,7 @@ import {
   UseFormReturn,
 } from 'react-hook-form';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ZodType } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ import { FIELD_NAMES, FIELD_TYPES } from '@/constants';
 import FileUpload from './FileUpload';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import config from '@/lib/config';
+import { cn } from '@/lib/utils';
 
 interface Props<T extends FieldValues> {
   schema: ZodType<T>;
@@ -44,6 +44,7 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: Props<T>) => {
   const isSignIn = type === 'SIGN_IN';
+  const [pending, setPending] = useState(false);
 
   const router = useRouter();
   const form: UseFormReturn<T> = useForm({
@@ -52,6 +53,7 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
+    setPending(true);
     const result = await onSubmit(data);
 
     if (result.success) {
@@ -68,6 +70,7 @@ const AuthForm = <T extends FieldValues>({
           result.error ?? 'An error occurred. Please try again later',
       });
     }
+    setPending(false);
   };
 
   return (
@@ -85,9 +88,9 @@ const AuthForm = <T extends FieldValues>({
           onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-6 w-full"
         >
-          {Object.keys(defaultValues).map((field) => (
+          {Object.keys(defaultValues).map((field, index) => (
             <FormField
-              key={field}
+              key={index}
               control={form.control}
               name={field as Path<T>}
               render={({ field }) => (
@@ -97,7 +100,7 @@ const AuthForm = <T extends FieldValues>({
                   </FormLabel>
                   <FormControl>
                     {field.name === 'universityCard' ? (
-                      <>
+                      <div>
                         <FileUpload
                           type="image"
                           accept="image/*"
@@ -106,7 +109,7 @@ const AuthForm = <T extends FieldValues>({
                           variant="dark"
                           onFileChange={field.onChange}
                         />
-                      </>
+                      </div>
                     ) : (
                       <Input
                         required
@@ -124,8 +127,15 @@ const AuthForm = <T extends FieldValues>({
               )}
             />
           ))}
-          <Button type="submit" className="form-btn">
-            {isSignIn ? 'Sign in' : 'Sign up'}
+          <Button
+            type="submit"
+            disabled={pending}
+            className={cn(
+              'form-btn',
+              pending ? 'cursor-not-allowed' : 'cursor-pointer',
+            )}
+          >
+            {pending ? 'Loading...' : isSignIn ? 'Sign in' : 'Sign up'}
           </Button>
         </form>
       </Form>

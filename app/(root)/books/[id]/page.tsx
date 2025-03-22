@@ -4,6 +4,7 @@ import BookOverview from '@/components/BookOverview';
 import BookVideo from '@/components/BookVideo';
 import { db } from '@/database/drizzle';
 import { books } from '@/database/schema';
+import { Book } from '@/types';
 import { eq, and, ne } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -14,11 +15,12 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const session = await auth();
 
   // Fetch book data by id
-  const [bookDetails] = await db
+  const [bookDetails] = (await db
     .select()
     .from(books)
     .where(eq(books.id, id))
-    .limit(1);
+    .limit(1)
+    .catch(() => [])) as Book[];
 
   if (!bookDetails) redirect('/404');
 
