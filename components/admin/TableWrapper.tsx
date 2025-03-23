@@ -13,15 +13,22 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import { AccountsColumns, booksColumns, usersColumns } from './Columns';
-import { AccountRequests, TableBook, TableUser } from '@/types';
+import {
+  AccountsColumns,
+  bookRequestsColumns,
+  booksColumns,
+  usersColumns,
+} from './Columns';
+import { AccountRequests, BookRequests, TableBook, TableUser } from '@/types';
 import { useSearchStore } from '@/store/searchStore';
 interface TableProps<T> {
   data: T[];
-  type: 'Books' | 'Users' | 'AccountRequests';
+  type: 'Books' | 'Users' | 'AccountRequests' | 'BookRequests';
 }
 
-const TableWrapper = <T extends TableBook | TableUser | AccountRequests>({
+const TableWrapper = <
+  T extends TableBook | TableUser | AccountRequests | BookRequests,
+>({
   data,
   type,
 }: TableProps<T>) => {
@@ -36,7 +43,10 @@ const TableWrapper = <T extends TableBook | TableUser | AccountRequests>({
           ? `${(each as TableUser).info.name} ${(each as TableUser).info.email}`
           : type === 'AccountRequests'
             ? `${(each as AccountRequests).dateJoined}`
-            : `${(each as TableBook).info.title} ${(each as TableBook).author} ${(each as TableBook).genre}`;
+            : type === 'BookRequests'
+              ? `${(each as BookRequests).userInfo.name} ${(each as BookRequests).userInfo.email} ${(each as BookRequests).bookInfo.title}`
+              : `${(each as TableBook).info.title} ${(each as TableBook).author} ${(each as TableBook).genre}`;
+
       return params.toLowerCase().includes(query?.toLowerCase());
     });
   }, [data, query]);
@@ -47,7 +57,9 @@ const TableWrapper = <T extends TableBook | TableUser | AccountRequests>({
       ? usersColumns
       : type === 'Books'
         ? booksColumns
-        : AccountsColumns) as ColumnDef<T, any>[],
+        : type === 'AccountRequests'
+          ? AccountsColumns
+          : bookRequestsColumns) as ColumnDef<T, any>[],
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -63,6 +75,8 @@ const TableWrapper = <T extends TableBook | TableUser | AccountRequests>({
         <h2 className="text-xl font-semibold">
           {type === 'AccountRequests' ? (
             'Account Registration Requests'
+          ) : type === 'BookRequests' ? (
+            'Borrow Book Requests'
           ) : (
             <>
               <span>All </span>

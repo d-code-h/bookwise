@@ -14,10 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { AccountRequests, TableBook, TableUser } from '@/types';
+import { AccountRequests, BookRequests, TableBook, TableUser } from '@/types';
 
 interface DataTableProps<
-  TData extends TableBook | TableUser | AccountRequests,
+  TData extends TableBook | TableUser | AccountRequests | BookRequests,
   TValue,
 > {
   columns: ColumnDef<TData, TValue>[];
@@ -25,7 +25,7 @@ interface DataTableProps<
 }
 
 export function DataTable<
-  TData extends TableBook | TableUser | AccountRequests,
+  TData extends TableBook | TableUser | AccountRequests | BookRequests,
   TValue,
 >({ columns, table }: DataTableProps<TData, TValue>) {
   return (

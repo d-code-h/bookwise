@@ -84,6 +84,22 @@ export interface AccountRequests {
   dateJoined: Date;
 }
 
+export interface BookRequests {
+  id: string;
+  bookInfo: {
+    coverUrl: string;
+    coverColor: string;
+    title: string;
+  };
+  userInfo: {
+    name: string;
+    email: string;
+  };
+  status: 'BORROWED' | 'RETURN';
+  borrowedDate: Date;
+  returnDate: string;
+  dueDate: string;
+}
 export interface User {
   fullName: string;
   email: string;

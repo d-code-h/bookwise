@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { AccountRequests, TableBook, TableUser } from '@/types';
+import { AccountRequests, BookRequests, TableBook, TableUser } from '@/types';
 import BookCover from '../BookCover';
 import Image from 'next/image';
 import { cn, dateConverter } from '@/lib/utils';
@@ -162,7 +162,7 @@ export const usersColumns: ColumnDef<TableUser>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              className="flex justify-between"
+              className="flex justify-between p-2"
               onClick={() => handleRoleChange('USER')}
             >
               <span className="text-pink-700 py-0.5 px-2.5 bg-pink-50 rounded-2xl font-medium text-sm">
@@ -177,7 +177,10 @@ export const usersColumns: ColumnDef<TableUser>[] = [
                 />
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleRoleChange('ADMIN')}>
+            <DropdownMenuItem
+              className="flex justify-between p-2"
+              onClick={() => handleRoleChange('ADMIN')}
+            >
               <span className="text-green-700 py-0.5 px-2.5 bg-green-50 rounded-2xl font-medium text-sm">
                 Admin
               </span>
@@ -349,6 +352,211 @@ export const AccountsColumns: ColumnDef<AccountRequests>[] = [
               width={20}
               height={20}
             />
+          </Button>
+        </div>
+      );
+    },
+  },
+];
+export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'bookInfo',
+    header: 'Book',
+    cell: ({ row }) => {
+      const { title, coverUrl, coverColor }: RowProps =
+        row.getValue('bookInfo');
+      return (
+        <div className="flex flex-row gap-1.5 items-center">
+          <BookCover
+            coverColor={coverColor}
+            coverImage={coverUrl}
+            width={true}
+            height={true}
+          />
+          <h5 className="text-sm font-semibold">{title}</h5>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'userInfo',
+    header: 'User Requested',
+    cell: ({ row }) => {
+      const {
+        name,
+        email,
+      }: {
+        name: string;
+        email: string;
+      } = row.getValue('userInfo');
+      return (
+        <div className="flex flex-row gap-2 items-center">
+          <UserAvatar name={name as string} />
+
+          <div className="text-sm flex flex-col">
+            <h5 className="font-semibold">{name}</h5>
+            <p className="text-[#64748B]">{email}</p>
+          </div>
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const [bookStatus, setBookStatus] = useState<string>(
+        row.getValue('status'),
+      );
+      const borrowedId = row.getValue('id');
+
+      const handleStatusChange = async (newStatus: string) => {
+        const result = await fetch('/api/books/update-status', {
+          method: 'POST',
+          body: JSON.stringify({
+            borrowedId,
+            newStatus,
+          }),
+        });
+        if (result.ok) {
+          setBookStatus(newStatus);
+        }
+      };
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div>
+              <span
+                className={`${
+                  bookStatus === 'BORROWED'
+                    ? 'text-purple-700 bg-purple-50'
+                    : bookStatus === 'RETURNED'
+                      ? 'text-green-700 bg-green-50'
+                      : 'text-red-700 bg-red-50'
+                } py-0.5 px-2.5 rounded-2xl font-medium text-sm`}
+              >
+                {bookStatus[0] + bookStatus.slice(1).toLowerCase()}
+              </span>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              className="flex justify-between p-2"
+              // onClick={() => handleStatusChange('USER')}
+            >
+              <span className="text-purple-700 py-0.5 px-2.5 bg-purple-50 rounded-2xl font-medium text-sm">
+                Borrowed
+              </span>
+              {bookStatus === 'BORROWED' && (
+                <Image
+                  src="/icons/admin/tick.svg"
+                  alt="selected status"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('RETURNED')}
+              className="flex justify-between p-2"
+            >
+              <span className="text-green-700 py-0.5 px-2.5 bg-green-50 rounded-2xl font-medium text-sm">
+                Returned
+              </span>
+
+              {bookStatus === 'RETURNED' && (
+                <Image
+                  src="/icons/admin/tick.svg"
+                  alt="selected status"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('LATE RETURN')}
+              className="flex justify-between p-2"
+            >
+              <span className="text-red-700 py-0.5 px-2.5 bg-red-50 rounded-2xl font-medium text-sm">
+                Late Return
+              </span>
+
+              {bookStatus === 'LATE RETURNED' && (
+                <Image
+                  src="/icons/admin/tick.svg"
+                  alt="selected status"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+  {
+    accessorKey: 'borrowedDate',
+    header: 'Borrowed date',
+    cell: ({ row }) => {
+      const date = row.getValue('borrowedDate') as Date;
+      return <div>{dateConverter(date)}</div>;
+    },
+  },
+  {
+    accessorKey: 'returnDate',
+    header: 'Return date',
+    cell: ({ row }) => {
+      const date = row.getValue('returnDate') as Date;
+      return <div>{date === null ? '-' : dateConverter(date)}</div>;
+    },
+  },
+  {
+    accessorKey: 'dueDate',
+    header: 'Due date',
+    cell: ({ row }) => {
+      const date = row.getValue('dueDate') as Date;
+      console.log(new Date(date));
+      return <div>{dateConverter(new Date(date))}</div>;
+    },
+  },
+
+  {
+    header: 'Receipt',
+    cell: ({ row }) => {
+      const id: string = row.getValue('id');
+      const [status, setStatus] = useState(row.original.status);
+
+      // const handleApproval = async () => {
+      //   if (status === 'APPROVED') {
+      //     await cancelAccountApproval(id);
+      //     setStatus('REJECTED');
+      //   } else {
+      //     await accountApproval(id);
+      //     setStatus('APPROVED');
+      //   }
+      // };
+
+      return (
+        <div className="flex flex-wrap gap-1">
+          <Button
+            className="px-2 py-3  rounded-md shadow-none text-primary-admin bg-light-300"
+            // disabled={status === 'APPROVED'}
+            // onClick={handleApproval}
+          >
+            <Image
+              src="/icons/admin/receipt.svg"
+              alt="Receipt"
+              width={16}
+              height={16}
+            />
+            <span>Generate</span>
           </Button>
         </div>
       );
