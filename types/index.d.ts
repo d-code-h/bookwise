@@ -79,7 +79,7 @@ export interface AccountRequests {
   };
   universityId: number;
   universityCard: string;
-  role: 'USER' | 'ADMIN';
+  status: 'APPROVED' | 'PENDING' | 'REJECTED';
   universityCard: string;
   dateJoined: Date;
 }

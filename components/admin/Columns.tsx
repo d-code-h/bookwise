@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { AccountRequests, TableBook, TableUser } from '@/types';
 import BookCover from '../BookCover';
 import Image from 'next/image';
-import { dateConverter } from '@/lib/utils';
+import { cn, dateConverter } from '@/lib/utils';
 import UserAvatar from './UserAvatar';
 import config from '@/lib/config';
 
@@ -14,8 +14,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
+import {
+  accountApproval,
+  cancelAccountApproval,
+} from '@/lib/admin/actions/users.action';
 
 interface RowProps {
   title: string;
@@ -311,18 +315,41 @@ export const AccountsColumns: ColumnDef<AccountRequests>[] = [
 
   {
     header: 'Actions',
-    cell: () => {
+    cell: ({ row }) => {
+      const id: string = row.getValue('id');
+      const [status, setStatus] = useState(row.original.status);
+
+      const handleApproval = async () => {
+        if (status === 'APPROVED') {
+          await cancelAccountApproval(id);
+          setStatus('REJECTED');
+        } else {
+          await accountApproval(id);
+          setStatus('APPROVED');
+        }
+      };
+
       return (
-        <div className="flex gap-5">
-          <Button className="px-2 py-3 text-green bg-green-100 rounded-md shadow-none">
+        <div className="flex flex-wrap gap-1 lg:gap-5">
+          <Button
+            className="px-2 py-3  rounded-md shadow-none text-green bg-green-100"
+            disabled={status === 'APPROVED'}
+            onClick={handleApproval}
+          >
             Approve Account
           </Button>
-          <Image
-            src="/icons/admin/cancel.svg"
-            alt="Cancel"
-            width={20}
-            height={20}
-          />
+          <Button
+            variant="ghost"
+            disabled={status === 'REJECTED'}
+            onClick={handleApproval}
+          >
+            <Image
+              src="/icons/admin/cancel.svg"
+              alt="Cancel"
+              width={20}
+              height={20}
+            />
+          </Button>
         </div>
       );
     },

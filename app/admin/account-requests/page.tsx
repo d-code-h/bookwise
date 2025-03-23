@@ -5,19 +5,25 @@ import type { AccountRequests } from '@/types';
 import React from 'react';
 
 const AccountRequests = async () => {
-  const allRequests = (await db
-    .select({
-      id: users.id,
-      info: {
-        name: users.fullName,
-        email: users.email,
-      },
-      universityId: users.universityId,
-      role: users.role,
-      dateJoined: users.createdAt,
-      universityCard: users.universityCard,
-    })
-    .from(users)) as AccountRequests[];
+  let allRequests = null;
+
+  try {
+    allRequests = (await db
+      .select({
+        id: users.id,
+        info: {
+          name: users.fullName,
+          email: users.email,
+        },
+        universityId: users.universityId,
+        status: users.status,
+        dateJoined: users.createdAt,
+        universityCard: users.universityCard,
+      })
+      .from(users)) as AccountRequests[];
+  } catch (error) {
+    return null;
+  }
 
   return (
     <div>
