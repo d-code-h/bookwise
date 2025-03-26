@@ -14,6 +14,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import {
@@ -21,6 +30,7 @@ import {
   cancelAccountApproval,
 } from '@/lib/admin/actions/users.action';
 import { useBookStatusStore } from '@/store/bookStatusStore';
+import ApprovalDialog from './ApprovalDialog';
 
 interface RowProps {
   title: string;
@@ -335,25 +345,32 @@ export const AccountsColumns: ColumnDef<AccountRequests>[] = [
 
       return (
         <div className="flex flex-wrap gap-1 lg:gap-5">
-          <Button
-            className="px-2 py-3  rounded-md shadow-none text-green bg-green-100"
-            disabled={status === 'APPROVED'}
-            onClick={handleApproval}
-          >
-            Approve Account
-          </Button>
-          <Button
-            variant="ghost"
-            disabled={status === 'REJECTED'}
-            onClick={handleApproval}
-          >
-            <Image
-              src="/icons/admin/cancel.svg"
-              alt="Cancel"
-              width={20}
-              height={20}
-            />
-          </Button>
+          <Dialog>
+            <ApprovalDialog id={id} setStatus={setStatus} variant="SUCCESS" />
+
+            <DialogTrigger asChild>
+              <Button
+                className="px-2 py-3  rounded-md shadow-none text-green bg-green-100"
+                disabled={status === 'APPROVED'}
+              >
+                Approve Account
+              </Button>
+            </DialogTrigger>
+          </Dialog>
+
+          <Dialog>
+            <ApprovalDialog id={id} setStatus={setStatus} variant="DANGER" />
+            <DialogTrigger asChild>
+              <Button variant="ghost" disabled={status === 'REJECTED'}>
+                <Image
+                  src="/icons/admin/cancel.svg"
+                  alt="Cancel"
+                  width={20}
+                  height={20}
+                />
+              </Button>
+            </DialogTrigger>
+          </Dialog>
         </div>
       );
     },
@@ -561,7 +578,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
       const id: string = row.getValue('id');
 
       const bookStatus = useBookStatusStore(
-        (state) => state.bookStatuses[id].status,
+        (state) => state.bookStatuses[id]?.status,
       );
       const isDisabled = bookStatus !== 'BORROWED';
 
