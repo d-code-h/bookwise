@@ -20,6 +20,7 @@ import {
   accountApproval,
   cancelAccountApproval,
 } from '@/lib/admin/actions/users.action';
+import { useBookStatusStore } from '@/store/bookStatusStore';
 
 interface RowProps {
   title: string;
@@ -410,21 +411,42 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const [bookStatus, setBookStatus] = useState<string>(
-        row.getValue('status'),
-      );
-      const borrowedId = row.getValue('id');
+      const borrowedId = row.getValue('id') as string;
+      const status = row.getValue('status') as
+        | 'BORROWED'
+        | 'RETURNED'
+        | 'LATE RETURN';
 
-      const handleStatusChange = async (newStatus: string) => {
+      let bookStatus = useBookStatusStore(
+        (state) => state.bookStatuses[borrowedId]?.status,
+      );
+      const setBookStatusStore = useBookStatusStore(
+        (state) => state.updateStatus,
+      );
+
+      if (!bookStatus) {
+        setBookStatusStore({ borrowedId, status, returnDate: null });
+        bookStatus =
+          useBookStatusStore.getState().bookStatuses[borrowedId].status;
+      }
+
+      const handleStatusChange = async (
+        newStatus: 'BORROWED' | 'RETURNED' | 'LATE RETURN',
+      ) => {
+        const returnDate =
+          newStatus === 'RETURNED' || newStatus === 'LATE RETURN'
+            ? new Date()
+            : null;
         const result = await fetch('/api/books/update-status', {
           method: 'POST',
           body: JSON.stringify({
             borrowedId,
             newStatus,
+            returnDate,
           }),
         });
         if (result.ok) {
-          setBookStatus(newStatus);
+          setBookStatusStore({ borrowedId, status: newStatus, returnDate });
         }
       };
 
@@ -448,7 +470,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               className="flex justify-between p-2"
-              // onClick={() => handleStatusChange('USER')}
+              onClick={() => handleStatusChange('BORROWED')}
             >
               <span className="text-purple-700 py-0.5 px-2.5 bg-purple-50 rounded-2xl font-medium text-sm">
                 Borrowed
@@ -487,7 +509,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
                 Late Return
               </span>
 
-              {bookStatus === 'LATE RETURNED' && (
+              {bookStatus === 'LATE RETURN' && (
                 <Image
                   src="/icons/admin/tick.svg"
                   alt="selected status"
@@ -513,8 +535,15 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
     accessorKey: 'returnDate',
     header: 'Return date',
     cell: ({ row }) => {
-      const date = row.getValue('returnDate') as Date;
-      return <div>{date === null ? '-' : dateConverter(date)}</div>;
+      const id = row.getValue('id') as string;
+
+      const returnDate = useBookStatusStore(
+        (state) => state.bookStatuses[id]?.returnDate,
+      );
+
+      return (
+        <div>{!returnDate ? '-' : dateConverter(new Date(returnDate))}</div>
+      );
     },
   },
   {
@@ -522,7 +551,6 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
     header: 'Due date',
     cell: ({ row }) => {
       const date = row.getValue('dueDate') as Date;
-      console.log(new Date(date));
       return <div>{dateConverter(new Date(date))}</div>;
     },
   },
@@ -531,24 +559,20 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
     header: 'Receipt',
     cell: ({ row }) => {
       const id: string = row.getValue('id');
-      const [status, setStatus] = useState(row.original.status);
 
-      // const handleApproval = async () => {
-      //   if (status === 'APPROVED') {
-      //     await cancelAccountApproval(id);
-      //     setStatus('REJECTED');
-      //   } else {
-      //     await accountApproval(id);
-      //     setStatus('APPROVED');
-      //   }
-      // };
+      const bookStatus = useBookStatusStore(
+        (state) => state.bookStatuses[id].status,
+      );
+      const isDisabled = bookStatus !== 'BORROWED';
+
+      const generateReceipt = async () => {};
 
       return (
         <div className="flex flex-wrap gap-1">
           <Button
             className="px-2 py-3  rounded-md shadow-none text-primary-admin bg-light-300"
-            // disabled={status === 'APPROVED'}
-            // onClick={handleApproval}
+            disabled={isDisabled}
+            onClick={generateReceipt}
           >
             <Image
               src="/icons/admin/receipt.svg"

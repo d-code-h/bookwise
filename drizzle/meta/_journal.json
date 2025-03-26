@@ -15,6 +15,13 @@
       "when": 1740930860843,
       "tag": "0001_organic_nico_minoru",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742788839552,
+      "tag": "0002_mixed_scream",
+      "breakpoints": true
     }
   ]
 }
