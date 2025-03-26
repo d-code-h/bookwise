@@ -27,13 +27,14 @@ import { toast } from 'sonner';
 
 interface Props extends Partial<Book> {
   type: 'create' | 'update';
-  book: Book;
+  book?: Book;
 }
 
 const BookForm = ({ type, ...books }: Props) => {
   const router = useRouter();
 
   const { book } = books;
+  if (!book) return;
 
   const defaultValues = {
     title: type === 'update' ? book.title : '',
