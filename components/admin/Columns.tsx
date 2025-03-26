@@ -31,6 +31,7 @@ import {
 } from '@/lib/admin/actions/users.action';
 import { useBookStatusStore } from '@/store/bookStatusStore';
 import ApprovalDialog from './ApprovalDialog';
+import Link from 'next/link';
 
 interface RowProps {
   title: string;
@@ -86,12 +87,14 @@ export const booksColumns: ColumnDef<TableBook>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-4 justify-center items-center">
-          <Image
-            src="/icons/admin/edit.svg"
-            alt="Edit"
-            width={20}
-            height={20}
-          />
+          <Link href={`/admin/books/update/${row.original.id}`}>
+            <Image
+              src="/icons/admin/edit.svg"
+              alt="Edit"
+              width={20}
+              height={20}
+            />
+          </Link>
           <Image
             src="/icons/admin/trash.svg"
             alt="Edit"

@@ -27,24 +27,30 @@ import { toast } from 'sonner';
 
 interface Props extends Partial<Book> {
   type: 'create' | 'update';
+  book: Book;
 }
 
 const BookForm = ({ type, ...books }: Props) => {
   const router = useRouter();
+
+  const { book } = books;
+
+  const defaultValues = {
+    title: type === 'update' ? book.title : '',
+    description: type === 'update' ? book.description : '',
+    author: type === 'update' ? book.author : '',
+    genre: type === 'update' ? book.genre : '',
+    rating: type === 'update' ? book.rating : 1.0,
+    totalCopies: type === 'update' ? book.totalCopies : 1,
+    coverUrl: type === 'update' ? book.coverUrl : '',
+    coverColor: type === 'update' ? book.coverColor : '',
+    videoUrl: type === 'update' ? book.videoUrl : '',
+    summary: type === 'update' ? book.summary : '',
+  };
+
   const form = useForm<z.infer<typeof bookSchema>>({
     resolver: zodResolver(bookSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-      author: '',
-      genre: '',
-      rating: 1.0,
-      totalCopies: 1,
-      coverUrl: '',
-      coverColor: '',
-      videoUrl: '',
-      summary: '',
-    },
+    defaultValues,
   });
 
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
@@ -52,7 +58,10 @@ const BookForm = ({ type, ...books }: Props) => {
 
     if (result.success) {
       toast.success('Success', {
-        description: 'Book created successfully',
+        description:
+          type === 'create'
+            ? 'Book created successfully'
+            : 'Book updated successfully',
         icon: '🚀',
         position: 'top-center',
       });
@@ -198,7 +207,7 @@ const BookForm = ({ type, ...books }: Props) => {
                 <FileUpload
                   type="image"
                   accept="image/*"
-                  placeholder="Upload a book cover"
+                  placeholder={type === 'create' ? 'Upload a book cover' : ''}
                   folder="books/covers"
                   variant="light"
                   value={field.value}
@@ -265,7 +274,7 @@ const BookForm = ({ type, ...books }: Props) => {
                 <FileUpload
                   type="video"
                   accept="video/*"
-                  placeholder="Upload a book trailer"
+                  placeholder={type === 'create' ? 'Upload a book trailer' : ''}
                   folder="books/videos"
                   variant="light"
                   value={field.value}
