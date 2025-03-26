@@ -71,7 +71,35 @@ export interface TableUser {
   dateJoined: Date;
   booksBorrowed: number;
 }
+export interface AccountRequests {
+  id: string;
+  info: {
+    name: string;
+    email: string;
+  };
+  universityId: number;
+  universityCard: string;
+  status: 'APPROVED' | 'PENDING' | 'REJECTED';
+  universityCard: string;
+  dateJoined: Date;
+}
 
+export interface BookRequests {
+  id: string;
+  bookInfo: {
+    coverUrl: string;
+    coverColor: string;
+    title: string;
+  };
+  userInfo: {
+    name: string;
+    email: string;
+  };
+  status: 'BORROWED' | 'RETURN';
+  borrowedDate: Date;
+  returnDate: string;
+  dueDate: string;
+}
 export interface User {
   fullName: string;
   email: string;

@@ -114,6 +114,7 @@ export default {
         gray: {
           100: '#CBD5E1',
         },
+
         // role: {
         //   user: '#C11574',
         //   admin: '',

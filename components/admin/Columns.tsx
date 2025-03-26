@@ -1,10 +1,10 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { TableBook, TableUser } from '@/types';
+import { AccountRequests, BookRequests, TableBook, TableUser } from '@/types';
 import BookCover from '../BookCover';
 import Image from 'next/image';
-import { dateConverter } from '@/lib/utils';
+import { cn, dateConverter } from '@/lib/utils';
 import UserAvatar from './UserAvatar';
 import config from '@/lib/config';
 
@@ -14,7 +14,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
+import { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import {
+  accountApproval,
+  cancelAccountApproval,
+} from '@/lib/admin/actions/users.action';
+import { useBookStatusStore } from '@/store/bookStatusStore';
+import ApprovalDialog from './ApprovalDialog';
+import Link from 'next/link';
 
 interface RowProps {
   title: string;
@@ -70,12 +87,14 @@ export const booksColumns: ColumnDef<TableBook>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-4 justify-center items-center">
-          <Image
-            src="/icons/admin/edit.svg"
-            alt="Edit"
-            width={20}
-            height={20}
-          />
+          <Link href={`/admin/books/update/${row.original.id}`}>
+            <Image
+              src="/icons/admin/edit.svg"
+              alt="Edit"
+              width={20}
+              height={20}
+            />
+          </Link>
           <Image
             src="/icons/admin/trash.svg"
             alt="Edit"
@@ -157,7 +176,7 @@ export const usersColumns: ColumnDef<TableUser>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              className="flex justify-between"
+              className="flex justify-between p-2"
               onClick={() => handleRoleChange('USER')}
             >
               <span className="text-pink-700 py-0.5 px-2.5 bg-pink-50 rounded-2xl font-medium text-sm">
@@ -172,7 +191,10 @@ export const usersColumns: ColumnDef<TableUser>[] = [
                 />
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleRoleChange('ADMIN')}>
+            <DropdownMenuItem
+              className="flex justify-between p-2"
+              onClick={() => handleRoleChange('ADMIN')}
+            >
               <span className="text-green-700 py-0.5 px-2.5 bg-green-50 rounded-2xl font-medium text-sm">
                 Admin
               </span>
@@ -236,6 +258,350 @@ export const usersColumns: ColumnDef<TableUser>[] = [
             width={20}
             height={20}
           />
+        </div>
+      );
+    },
+  },
+];
+export const AccountsColumns: ColumnDef<AccountRequests>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'info',
+    header: 'Name',
+    cell: ({ row }) => {
+      const {
+        name,
+        email,
+      }: {
+        name: string;
+        email: string;
+      } = row.getValue('info');
+      return (
+        <div className="flex flex-row gap-2 items-center">
+          <UserAvatar name={name as string} />
+
+          <div className="text-sm flex flex-col">
+            <h5 className="font-semibold">{name}</h5>
+            <p className="text-[#64748B]">{email}</p>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'dateJoined',
+    header: 'Date Joined',
+    cell: ({ row }) => {
+      const date = row.getValue('dateJoined') as Date;
+      return <div>{dateConverter(date)}</div>;
+    },
+  },
+
+  {
+    accessorKey: 'universityId',
+    header: 'University ID No',
+  },
+  {
+    accessorKey: 'universityCard',
+    header: 'University ID Card',
+    cell: ({ row }) => {
+      const cardUrl = row.getValue('universityCard') as string;
+
+      return (
+        <a
+          className="flex flex-row flex-wrap gap-1.5"
+          href={`${urlEndpoint}${cardUrl}`}
+          target="_blank"
+        >
+          <span className="text-blue-100 text-sm font-medium">
+            View ID Card
+          </span>
+          <Image
+            src="/icons/admin/external.svg"
+            alt="id card"
+            width={14}
+            height={14}
+          />
+        </a>
+      );
+    },
+  },
+
+  {
+    header: 'Actions',
+    cell: ({ row }) => {
+      const id: string = row.getValue('id');
+      const [status, setStatus] = useState(row.original.status);
+
+      const handleApproval = async () => {
+        if (status === 'APPROVED') {
+          await cancelAccountApproval(id);
+          setStatus('REJECTED');
+        } else {
+          await accountApproval(id);
+          setStatus('APPROVED');
+        }
+      };
+
+      return (
+        <div className="flex flex-wrap gap-1 lg:gap-5">
+          <Dialog>
+            <ApprovalDialog id={id} setStatus={setStatus} variant="SUCCESS" />
+
+            <DialogTrigger asChild>
+              <Button
+                className="px-2 py-3  rounded-md shadow-none text-green bg-green-100"
+                disabled={status === 'APPROVED'}
+              >
+                Approve Account
+              </Button>
+            </DialogTrigger>
+          </Dialog>
+
+          <Dialog>
+            <ApprovalDialog id={id} setStatus={setStatus} variant="DANGER" />
+            <DialogTrigger asChild>
+              <Button variant="ghost" disabled={status === 'REJECTED'}>
+                <Image
+                  src="/icons/admin/cancel.svg"
+                  alt="Cancel"
+                  width={20}
+                  height={20}
+                />
+              </Button>
+            </DialogTrigger>
+          </Dialog>
+        </div>
+      );
+    },
+  },
+];
+export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'bookInfo',
+    header: 'Book',
+    cell: ({ row }) => {
+      const { title, coverUrl, coverColor }: RowProps =
+        row.getValue('bookInfo');
+      return (
+        <div className="flex flex-row gap-1.5 items-center">
+          <BookCover
+            coverColor={coverColor}
+            coverImage={coverUrl}
+            width={true}
+            height={true}
+          />
+          <h5 className="text-sm font-semibold">{title}</h5>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'userInfo',
+    header: 'User Requested',
+    cell: ({ row }) => {
+      const {
+        name,
+        email,
+      }: {
+        name: string;
+        email: string;
+      } = row.getValue('userInfo');
+      return (
+        <div className="flex flex-row gap-2 items-center">
+          <UserAvatar name={name as string} />
+
+          <div className="text-sm flex flex-col">
+            <h5 className="font-semibold">{name}</h5>
+            <p className="text-[#64748B]">{email}</p>
+          </div>
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const borrowedId = row.getValue('id') as string;
+      const status = row.getValue('status') as
+        | 'BORROWED'
+        | 'RETURNED'
+        | 'LATE RETURN';
+
+      let bookStatus = useBookStatusStore(
+        (state) => state.bookStatuses[borrowedId]?.status,
+      );
+      const setBookStatusStore = useBookStatusStore(
+        (state) => state.updateStatus,
+      );
+
+      if (!bookStatus) {
+        setBookStatusStore({ borrowedId, status, returnDate: null });
+        bookStatus =
+          useBookStatusStore.getState().bookStatuses[borrowedId].status;
+      }
+
+      const handleStatusChange = async (
+        newStatus: 'BORROWED' | 'RETURNED' | 'LATE RETURN',
+      ) => {
+        const returnDate =
+          newStatus === 'RETURNED' || newStatus === 'LATE RETURN'
+            ? new Date()
+            : null;
+        const result = await fetch('/api/books/update-status', {
+          method: 'POST',
+          body: JSON.stringify({
+            borrowedId,
+            newStatus,
+            returnDate,
+          }),
+        });
+        if (result.ok) {
+          setBookStatusStore({ borrowedId, status: newStatus, returnDate });
+        }
+      };
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div>
+              <span
+                className={`${
+                  bookStatus === 'BORROWED'
+                    ? 'text-purple-700 bg-purple-50'
+                    : bookStatus === 'RETURNED'
+                      ? 'text-green-700 bg-green-50'
+                      : 'text-red-700 bg-red-50'
+                } py-0.5 px-2.5 rounded-2xl font-medium text-sm`}
+              >
+                {bookStatus[0] + bookStatus.slice(1).toLowerCase()}
+              </span>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              className="flex justify-between p-2"
+              onClick={() => handleStatusChange('BORROWED')}
+            >
+              <span className="text-purple-700 py-0.5 px-2.5 bg-purple-50 rounded-2xl font-medium text-sm">
+                Borrowed
+              </span>
+              {bookStatus === 'BORROWED' && (
+                <Image
+                  src="/icons/admin/tick.svg"
+                  alt="selected status"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('RETURNED')}
+              className="flex justify-between p-2"
+            >
+              <span className="text-green-700 py-0.5 px-2.5 bg-green-50 rounded-2xl font-medium text-sm">
+                Returned
+              </span>
+
+              {bookStatus === 'RETURNED' && (
+                <Image
+                  src="/icons/admin/tick.svg"
+                  alt="selected status"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('LATE RETURN')}
+              className="flex justify-between p-2"
+            >
+              <span className="text-red-700 py-0.5 px-2.5 bg-red-50 rounded-2xl font-medium text-sm">
+                Late Return
+              </span>
+
+              {bookStatus === 'LATE RETURN' && (
+                <Image
+                  src="/icons/admin/tick.svg"
+                  alt="selected status"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+  {
+    accessorKey: 'borrowedDate',
+    header: 'Borrowed date',
+    cell: ({ row }) => {
+      const date = row.getValue('borrowedDate') as Date;
+      return <div>{dateConverter(date)}</div>;
+    },
+  },
+  {
+    accessorKey: 'returnDate',
+    header: 'Return date',
+    cell: ({ row }) => {
+      const id = row.getValue('id') as string;
+
+      const returnDate = useBookStatusStore(
+        (state) => state.bookStatuses[id]?.returnDate,
+      );
+
+      return (
+        <div>{!returnDate ? '-' : dateConverter(new Date(returnDate))}</div>
+      );
+    },
+  },
+  {
+    accessorKey: 'dueDate',
+    header: 'Due date',
+    cell: ({ row }) => {
+      const date = row.getValue('dueDate') as Date;
+      return <div>{dateConverter(new Date(date))}</div>;
+    },
+  },
+
+  {
+    header: 'Receipt',
+    cell: ({ row }) => {
+      const id: string = row.getValue('id');
+
+      const bookStatus = useBookStatusStore(
+        (state) => state.bookStatuses[id]?.status,
+      );
+      const isDisabled = bookStatus !== 'BORROWED';
+
+      const generateReceipt = async () => {};
+
+      return (
+        <div className="flex flex-wrap gap-1">
+          <Button
+            className="px-2 py-3  rounded-md shadow-none text-primary-admin bg-light-300"
+            disabled={isDisabled}
+            onClick={generateReceipt}
+          >
+            <Image
+              src="/icons/admin/receipt.svg"
+              alt="Receipt"
+              width={16}
+              height={16}
+            />
+            <span>Generate</span>
+          </Button>
         </div>
       );
     },

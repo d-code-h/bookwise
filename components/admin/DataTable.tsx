@@ -14,17 +14,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { TableBook, TableUser } from '@/types';
+import { AccountRequests, BookRequests, TableBook, TableUser } from '@/types';
 
-interface DataTableProps<TData extends TableBook | TableUser, TValue> {
+interface DataTableProps<
+  TData extends TableBook | TableUser | AccountRequests | BookRequests,
+  TValue,
+> {
   columns: ColumnDef<TData, TValue>[];
   table: TableType<TData>;
 }
 
-export function DataTable<TData extends TableBook | TableUser, TValue>({
-  columns,
-  table,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<
+  TData extends TableBook | TableUser | AccountRequests | BookRequests,
+  TValue,
+>({ columns, table }: DataTableProps<TData, TValue>) {
   return (
     <div className="rounded-md">
       <Table>

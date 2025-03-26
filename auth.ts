@@ -1,9 +1,24 @@
-import NextAuth, { User } from 'next-auth';
+import NextAuth, { User as NextAuthUser } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { db } from './database/drizzle';
 import { users } from './database/schema';
 import { eq } from 'drizzle-orm';
 import { compare } from 'bcryptjs';
+
+interface User extends NextAuthUser {
+  role: string;
+}
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+    };
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -43,6 +58,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user[0].id,
           email: user[0].email,
           name: user[0].fullName,
+          role: user[0].role,
         } as User;
       },
     }),
@@ -55,13 +71,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
     async jwt({ token, user }) {
-      if (user) {
+      if (user && 'role' in user) {
         token.id = user.id;
         token.name = user.name;
+        token.role = user.role;
       }
       return token;
     },

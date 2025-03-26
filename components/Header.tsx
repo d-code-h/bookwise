@@ -18,17 +18,19 @@ const Header = ({ session }: { session: Session }) => {
       </Link>
 
       <ul className="flex flex-row items-center gap-8">
-        <li>
-          <Link
-            href="/admin"
-            className={cn(
-              'text-base cursor-pointer capitalize',
-              pathname === '/admin' ? 'text-light-200' : 'text-light-100',
-            )}
-          >
-            Admin
-          </Link>
-        </li>
+        {session?.user?.role === 'ADMIN' && (
+          <li>
+            <Link
+              href="/admin"
+              className={cn(
+                'text-base cursor-pointer capitalize',
+                pathname === '/admin' ? 'text-light-200' : 'text-light-100',
+              )}
+            >
+              Admin
+            </Link>
+          </li>
+        )}
         <li>
           <Link
             href="/search"
