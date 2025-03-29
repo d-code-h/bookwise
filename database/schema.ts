@@ -54,7 +54,9 @@ export const books = pgTable('books', {
   availableCopies: integer('available_copies').notNull().default(0),
   videoUrl: text('video_url').notNull(),
   summary: varchar('summary').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
   isLoanedBook: boolean('is_loaned_book').default(false),
 });
 

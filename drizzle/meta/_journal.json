@@ -22,6 +22,13 @@
       "when": 1742788839552,
       "tag": "0002_mixed_scream",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1743264011253,
+      "tag": "0003_rainy_wendigo",
+      "breakpoints": true
     }
   ]
 }

@@ -4,9 +4,10 @@ import { books, borrowRecords, users } from '@/database/schema';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { desc } from 'drizzle-orm';
-import { Book } from '@/types';
+import { Book, BookRequests } from '@/types';
 import AccountRequests from '@/components/admin/AccountRequests';
 import RecentlyAddedBooks from '@/components/admin/RecentlyAddedBooks';
+import { eq } from 'drizzle-orm';
 
 const Container = ({
   title,
@@ -60,34 +61,45 @@ const Admin = async () => {
     email: string;
   }
 
-  interface BookRequest {
-    id: string;
-    userId: string;
-    bookId: string;
-    borrowDate: Date;
-    dueDate: string;
-    returnDate: string | null;
-    status: 'BORROWED' | 'RETURNED' | 'LATE RETURN';
-    createdAt: Date | null;
-  }
-
   let recentBooks: Book[] = [];
-  let bookRequests: BookRequest[] = [];
+  let bookRequests: BookRequests[] = [];
   let accountRequests: AccountRequest[] = [];
 
   try {
     const [b, bRequest, aRequest] = await Promise.all([
-      db.select().from(books).orderBy(desc(books.createdAt)).limit(10),
+      db.select().from(books).orderBy(desc(books.createdAt)).limit(4),
       db
-        .select()
+        .select({
+          id: borrowRecords.id,
+          bookId: books.id,
+          userId: users.id,
+          status: borrowRecords.status,
+          createdAt: borrowRecords.createdAt,
+          borrowedDate: borrowRecords.borrowDate,
+          returnDate: borrowRecords.returnDate,
+          dueDate: borrowRecords.dueDate,
+
+          bookInfo: {
+            title: books.title,
+            coverUrl: books.coverUrl,
+            coverColor: books.coverColor,
+            genre: books.genre,
+          },
+          userInfo: {
+            name: users.fullName,
+            email: users.email,
+          },
+        })
         .from(borrowRecords)
         .orderBy(desc(borrowRecords.createdAt))
-        .limit(10),
+        .limit(3)
+        .innerJoin(books, eq(borrowRecords.bookId, books.id))
+        .innerJoin(users, eq(borrowRecords.userId, users.id)),
       db
         .select({ fullName: users.fullName, email: users.email })
         .from(users)
         .orderBy(desc(users.createdAt))
-        .limit(10),
+        .limit(6),
     ]);
 
     if (b && b.length > 0) {
@@ -109,7 +121,7 @@ const Admin = async () => {
       <div className="flex flex-wrap flex-col lg:flex-row gap-4">
         <div className="space-y-5 flex-1">
           <Container title="Book Requests" href="borrowed-books">
-            <p>dd</p>
+            <RecentlyAddedBooks type="bookRequests" books={bookRequests} />
           </Container>
           <Container title="Account Requests" href="account-requests">
             <AccountRequests accountRequests={accountRequests} />
@@ -117,7 +129,7 @@ const Admin = async () => {
         </div>
         <div className="flex-1">
           <Container title="Recently Added Books" href="books">
-            <RecentlyAddedBooks recentBooks={recentBooks} />
+            <RecentlyAddedBooks type="latestBooks" books={recentBooks} />
           </Container>
         </div>
       </div>

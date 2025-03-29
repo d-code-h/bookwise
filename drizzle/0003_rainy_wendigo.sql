@@ -1,0 +1,1 @@
+ALTER TABLE "books" ALTER COLUMN "created_at" SET NOT NULL;
