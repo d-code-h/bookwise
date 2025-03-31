@@ -30,7 +30,7 @@ const AllBookRequests = async () => {
       .innerJoin(users, eq(borrowRecords.userId, users.id)) // Join users table
       .innerJoin(books, eq(borrowRecords.bookId, books.id))) as BookRequests[]; // Join books table
   } catch (error) {
-    console.error('Error fetching book requests:', error);
+    console.log('Error fetching book requests:', error);
     return null;
   }
 

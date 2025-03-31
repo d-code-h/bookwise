@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { AccountRequests, BookRequests, TableBook, TableUser } from '@/types';
 import BookCover from '../BookCover';
 import Image from 'next/image';
-import { cn, dateConverter } from '@/lib/utils';
+import { dateConverter } from '@/lib/utils';
 import UserAvatar from './UserAvatar';
 import config from '@/lib/config';
 
@@ -14,17 +14,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
-import { useEffect, useState } from 'react';
-import { Button } from '../ui/button';
+import { useState } from 'react';
 import {
   accountApproval,
   cancelAccountApproval,
@@ -32,6 +24,7 @@ import {
 import { useBookStatusStore } from '@/store/bookStatusStore';
 import ApprovalDialog from './ApprovalDialog';
 import Link from 'next/link';
+import { Button } from '../ui/button';
 
 interface RowProps {
   title: string;
@@ -86,7 +79,7 @@ export const booksColumns: ColumnDef<TableBook>[] = [
     header: 'Action',
     cell: ({ row }) => {
       return (
-        <div className="flex gap-4 justify-center items-center">
+        <div className="flex gap-4 flex-wrap justify-center items-center">
           <Link href={`/admin/books/update/${row.original.id}`}>
             <Image
               src="/icons/admin/edit.svg"

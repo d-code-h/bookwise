@@ -1,4 +1,4 @@
-import TotalReports from '@/components/admin/TotalReports';
+import TotalReport from '@/components/admin/TotalReport';
 import { db } from '@/database/drizzle';
 import { books, borrowRecords, users } from '@/database/schema';
 import Link from 'next/link';
@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 import { desc } from 'drizzle-orm';
 import { Book, BookRequests } from '@/types';
 import AccountRequests from '@/components/admin/AccountRequests';
-import RecentlyAddedBooks from '@/components/admin/RecentlyAddedBooks';
+import BookList from '@/components/admin/BookList';
 import { eq } from 'drizzle-orm';
 
 const Container = ({
@@ -35,27 +35,6 @@ const Container = ({
 };
 
 const Admin = async () => {
-  const totalReports = [
-    {
-      title: 'Borrowed Books',
-      total: 145,
-      status: 'down',
-      value: 2,
-    },
-    {
-      title: 'Total Users',
-      total: 317,
-      status: 'up',
-      value: 4,
-    },
-    {
-      title: 'Total Books',
-      total: 163,
-      status: 'up',
-      value: 2,
-    },
-  ];
-
   interface AccountRequest {
     fullName: string;
     email: string;
@@ -117,11 +96,11 @@ const Admin = async () => {
 
   return (
     <div>
-      <TotalReports totalReports={totalReports} />
+      <TotalReport />
       <div className="flex flex-wrap flex-col lg:flex-row gap-4">
         <div className="space-y-5 flex-1">
           <Container title="Book Requests" href="borrowed-books">
-            <RecentlyAddedBooks type="bookRequests" books={bookRequests} />
+            <BookList type="bookRequests" books={bookRequests} />
           </Container>
           <Container title="Account Requests" href="account-requests">
             <AccountRequests accountRequests={accountRequests} />
@@ -129,7 +108,7 @@ const Admin = async () => {
         </div>
         <div className="flex-1">
           <Container title="Recently Added Books" href="books">
-            <RecentlyAddedBooks type="latestBooks" books={recentBooks} />
+            <BookList type="latestBooks" books={recentBooks} />
           </Container>
         </div>
       </div>

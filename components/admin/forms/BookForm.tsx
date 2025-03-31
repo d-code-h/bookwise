@@ -34,19 +34,18 @@ const BookForm = ({ type, ...books }: Props) => {
   const router = useRouter();
 
   const { book } = books;
-  if (!book) return;
 
   const defaultValues = {
-    title: type === 'update' ? book.title : '',
-    description: type === 'update' ? book.description : '',
-    author: type === 'update' ? book.author : '',
-    genre: type === 'update' ? book.genre : '',
-    rating: type === 'update' ? book.rating : 1.0,
-    totalCopies: type === 'update' ? book.totalCopies : 1,
-    coverUrl: type === 'update' ? book.coverUrl : '',
-    coverColor: type === 'update' ? book.coverColor : '',
-    videoUrl: type === 'update' ? book.videoUrl : '',
-    summary: type === 'update' ? book.summary : '',
+    title: type === 'update' ? book?.title : '',
+    description: type === 'update' ? book?.description : '',
+    author: type === 'update' ? book?.author : '',
+    genre: type === 'update' ? book?.genre : '',
+    rating: type === 'update' ? book?.rating : 1.0,
+    totalCopies: type === 'update' ? book?.totalCopies : 1,
+    coverUrl: type === 'update' ? book?.coverUrl : '',
+    coverColor: type === 'update' ? book?.coverColor : '',
+    videoUrl: type === 'update' ? book?.videoUrl : '',
+    summary: type === 'update' ? book?.summary : '',
   };
 
   const form = useForm<z.infer<typeof bookSchema>>({

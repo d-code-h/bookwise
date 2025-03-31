@@ -7,8 +7,9 @@ interface State {
 
 export const useSearchStore = create<State>((set) => ({
   query: '',
-  setQuery: (query: string) =>
-    set({
+  setQuery: (query: string) => {
+    return set({
       query: query,
-    }),
+    });
+  },
 }));

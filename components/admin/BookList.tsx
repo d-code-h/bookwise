@@ -5,15 +5,13 @@ import { Book, BookRequests } from '@/types';
 import UserAvatar from './UserAvatar';
 import { cn } from '@/lib/utils';
 
-const RecentlyAddedBooks = ({
+const BookList = ({
   type,
   books,
 }: {
   type: 'latestBooks' | 'bookRequests';
   books: Book[] | BookRequests[];
 }) => {
-  console.log('books', books);
-
   const sortedBooks = books.map((book) => {
     if (type === 'bookRequests') {
       return {
@@ -125,4 +123,4 @@ const RecentlyAddedBooks = ({
   );
 };
 
-export default RecentlyAddedBooks;
+export default BookList;
