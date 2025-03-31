@@ -122,7 +122,7 @@ export const usersColumns: ColumnDef<TableUser>[] = [
 
           <div className="text-sm flex flex-col">
             <h5 className="font-semibold">{name}</h5>
-            <p className="text-[#64748B]">{email}</p>
+            <p className="text-gray-400">{email}</p>
           </div>
         </div>
       );
@@ -278,7 +278,7 @@ export const AccountsColumns: ColumnDef<AccountRequests>[] = [
 
           <div className="text-sm flex flex-col">
             <h5 className="font-semibold">{name}</h5>
-            <p className="text-[#64748B]">{email}</p>
+            <p className="text-gray-400">{email}</p>
           </div>
         </div>
       );
@@ -413,7 +413,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
 
           <div className="text-sm flex flex-col">
             <h5 className="font-semibold">{name}</h5>
-            <p className="text-[#64748B]">{email}</p>
+            <p className="text-gray-400">{email}</p>
           </div>
         </div>
       );
