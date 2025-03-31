@@ -58,6 +58,9 @@ const FileUpload = ({
   const [file, setFile] = useState<{ filePath: string }>({
     filePath: value || '',
   });
+
+  console.log('File', file);
+
   const [progress, setProgress] = useState(0);
 
   const styles = {
@@ -160,7 +163,7 @@ const FileUpload = ({
         </div>
       )}
 
-      {file &&
+      {file.filePath &&
         (type === 'image' ? (
           <IKImage
             alt={file.filePath}

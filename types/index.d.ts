@@ -9,7 +9,7 @@ interface BookBase {
   description: string;
   videoUrl: string;
   summary: string;
-  createdAt: Date | null;
+  createdAt: Date;
   isLoanedBook: boolean | null;
 }
 export interface Book extends BookBase {
@@ -90,14 +90,16 @@ export interface BookRequests {
     coverUrl: string;
     coverColor: string;
     title: string;
+    genre?: string;
+    author?: string;
   };
   userInfo: {
     name: string;
     email: string;
   };
-  status: 'BORROWED' | 'RETURN';
+  status: 'BORROWED' | 'RETURNED' | 'LATE RETURN';
   borrowedDate: Date;
-  returnDate: string;
+  returnDate: string | null;
   dueDate: string;
 }
 export interface User {
