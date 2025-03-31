@@ -99,7 +99,7 @@ const Admin = async () => {
       <TotalReport />
       <div className="flex flex-wrap flex-col lg:flex-row gap-4">
         <div className="space-y-5 flex-1">
-          <Container title="Book Requests" href="borrowed-books">
+          <Container title="Book Requests" href="borrow-requests">
             <BookList type="bookRequests" books={bookRequests} />
           </Container>
           <Container title="Account Requests" href="account-requests">

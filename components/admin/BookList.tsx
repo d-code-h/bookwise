@@ -61,8 +61,8 @@ const BookList = ({
         className={cn(
           'overflow-auto scrollbar-thin scrollbar-thumb-primary-admin scrollbar-track-gray-200',
           type === 'bookRequests'
-            ? 'space-y-3 h-[350px]'
-            : 'space-y-3 h-[505px]',
+            ? 'space-y-3 max-h-[350px]'
+            : 'space-y-3 max-h-[505px]',
         )}
       >
         {sortedBooks.map((book, index) => (

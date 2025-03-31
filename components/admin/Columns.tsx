@@ -384,7 +384,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
       const { title, coverUrl, coverColor }: RowProps =
         row.getValue('bookInfo');
       return (
-        <div className="flex flex-row gap-1.5 items-center">
+        <div className="flex flex-wrap flex-row gap-1.5 items-center">
           <BookCover
             coverColor={coverColor}
             coverImage={coverUrl}

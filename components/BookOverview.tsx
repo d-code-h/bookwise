@@ -24,20 +24,35 @@ const BookOverview = async ({
   coverUrl,
   userId,
 }: Props) => {
-  const [user] = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
+  let user;
+  let isBorrowedBook;
+
+  try {
+    const [fetchedUser] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    user = fetchedUser;
+  } catch (error) {
+    console.log('Error fetching user:', error);
+    return null;
+  }
 
   if (!user) return null;
 
-  const isBorrowedBook = await db
-    .select()
-    .from(borrowRecords)
-
-    .where(and(eq(borrowRecords.userId, userId), eq(borrowRecords.bookId, id))) // Only current book
-    .limit(1);
+  try {
+    isBorrowedBook = await db
+      .select()
+      .from(borrowRecords)
+      .where(
+        and(eq(borrowRecords.userId, userId), eq(borrowRecords.bookId, id)),
+      )
+      .limit(1);
+  } catch (error) {
+    console.log('Error checking borrowed book:', error);
+    return null;
+  }
 
   const borrowingEligibility = {
     isEligible:

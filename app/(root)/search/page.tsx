@@ -22,19 +22,32 @@ const Search = () => {
   const [genre, setGenre] = useState(searchParams.get('genre') || 'All');
   const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>('Failed to fetch books');
 
   // Fetch books when search, genre, or page changes
   useEffect(() => {
     const fetchBooks = async () => {
       setLoading(true);
-      const result = await fetch(
-        `/api/books?search=${search}&genre=${genre}&page=${page}`,
-      );
-      const data = await result.json();
+      try {
+        const result = await fetch(
+          `/api/books?search=${search}&genre=${genre}&page=${page}`,
+        );
+        if (!result.ok) {
+          throw new Error('Failed to fetch books');
+          // setError("Failed to fetch books")
+        }
+        const data = await result.json();
 
-      setBooks(data.books);
-      setTotalPages(data.totalPages);
-      setLoading(false);
+        setBooks(data.books);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.error('Error fetching books:', error);
+        setError('Failed to fetch books');
+        setBooks([]);
+        setTotalPages(1);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchBooks();
@@ -95,10 +108,13 @@ const Search = () => {
             />
 
             <section className="text-white text-base space-y-3.5">
-              <h4 className="text-base font-semibold">No Results Found</h4>
+              <h4 className="text-base font-semibold">
+                {error ? error : 'No Results Found'}
+              </h4>
               <p className="text-xs text-light-100">
-                We couldn&apos;t find any books matching your search. Try using
-                different keywords or check for typos.
+                {error
+                  ? 'Ussh! Not from you. An error occur from our end. Try refresh or some back some other time.'
+                  : 'We couldn&apos;t find any books matching your search. Try using different keywords or check for typos.'}
               </p>
             </section>
             <Button
