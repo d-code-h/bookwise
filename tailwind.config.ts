@@ -113,6 +113,7 @@ export default {
         },
         gray: {
           100: '#CBD5E1',
+          400: '#64748B',
         },
 
         // role: {

@@ -1,45 +1,19 @@
 import TotalReport from '@/components/admin/TotalReport';
 import { db } from '@/database/drizzle';
 import { books, borrowRecords, users } from '@/database/schema';
-import Link from 'next/link';
-import { ReactNode } from 'react';
 import { desc } from 'drizzle-orm';
 import { Book, BookRequests } from '@/types';
 import AccountRequests from '@/components/admin/AccountRequests';
 import BookList from '@/components/admin/BookList';
 import { eq } from 'drizzle-orm';
+import { Container } from '@/components/admin/Container';
 
-const Container = ({
-  title,
-  href,
-  children,
-}: {
-  title: string;
-  href: string;
-  children: ReactNode;
-}) => {
-  return (
-    <div className="bg-white p-4 rounded-xl space-y-3.5 shadow- shadow-slate-500">
-      <div className="flex justify-between items-center">
-        <h5 className="text-xl font-semibold text-dark-400">{title}</h5>
-        <Link
-          className="font-semibold text-sm text-primary-admin px-2 py-3 rounded-md bg-light-300"
-          href={`/admin/${href}`}
-        >
-          View all
-        </Link>
-      </div>
-      <div>{children}</div>
-    </div>
-  );
-};
+interface AccountRequest {
+  fullName: string;
+  email: string;
+}
 
 const Admin = async () => {
-  interface AccountRequest {
-    fullName: string;
-    email: string;
-  }
-
   let recentBooks: Book[] = [];
   let bookRequests: BookRequests[] = [];
   let accountRequests: AccountRequest[] = [];
@@ -99,7 +73,7 @@ const Admin = async () => {
       <TotalReport />
       <div className="flex flex-wrap flex-col lg:flex-row gap-4">
         <div className="space-y-5 flex-1">
-          <Container title="Book Requests" href="borrowed-books">
+          <Container title="Book Requests" href="borrow-requests">
             <BookList type="bookRequests" books={bookRequests} />
           </Container>
           <Container title="Account Requests" href="account-requests">

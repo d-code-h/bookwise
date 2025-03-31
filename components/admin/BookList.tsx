@@ -4,6 +4,7 @@ import BookCover from '@/components/BookCover';
 import { Book, BookRequests } from '@/types';
 import UserAvatar from './UserAvatar';
 import { cn } from '@/lib/utils';
+import Empty from './Empty';
 
 const BookList = ({
   type,
@@ -61,63 +62,67 @@ const BookList = ({
         className={cn(
           'overflow-auto scrollbar-thin scrollbar-thumb-primary-admin scrollbar-track-gray-200',
           type === 'bookRequests'
-            ? 'space-y-3 h-[350px]'
-            : 'space-y-3 h-[505px]',
+            ? 'space-y-3 max-h-[350px]'
+            : 'space-y-3 max-h-[505px]',
         )}
       >
-        {sortedBooks.map((book, index) => (
-          <div
-            key={book.id || index}
-            className={cn(
-              'flex gap-3.5 items-center p-3.5 rounded-lg',
+        {sortedBooks.length > 0 ? (
+          sortedBooks.map((book, index) => (
+            <div
+              key={book.id || index}
+              className={cn(
+                'flex gap-3.5 items-center p-3.5 rounded-lg',
 
-              type === 'bookRequests'
-                ? 'bg-light-300 hover:bg-light-200'
-                : 'bg-white hover:bg-light-200',
-            )}
-          >
-            <BookCover
-              variant="wide"
-              className="z-10 w-14 h-[76px]"
-              coverColor={book.coverColor}
-              coverImage={book.coverUrl}
-            />
-            <div>
-              <h5 className="font-semibold text-base text-dark-400 tracking-tight">
-                {book.title}
-              </h5>
-              <p className="text-[#64748B] text-sm flex items-center gap-2 mb-1.5 mt-0.5 flex-wrap">
-                <span>By {book.author}</span>
-                <span className="w-1 h-1 bg-[#8C8E98] rounded-full"></span>
-                <span>{book.genre}</span>
-              </p>
-              <div className=" text-xs text-dark-200 flex gap-3 items-center">
-                {type === 'bookRequests' && (
+                type === 'bookRequests'
+                  ? 'bg-light-300 hover:bg-light-200'
+                  : 'bg-white hover:bg-light-200',
+              )}
+            >
+              <BookCover
+                variant="wide"
+                className="z-10 w-14 h-[76px]"
+                coverColor={book.coverColor}
+                coverImage={book.coverUrl}
+              />
+              <div>
+                <h5 className="font-semibold text-base text-dark-400 tracking-tight">
+                  {book.title}
+                </h5>
+                <p className="text-gray-400 text-sm flex items-center gap-2 mb-1.5 mt-0.5 flex-wrap">
+                  <span>By {book.author}</span>
+                  <span className="w-1 h-1 bg-[#8C8E98] rounded-full"></span>
+                  <span>{book.genre}</span>
+                </p>
+                <div className=" text-xs text-dark-200 flex gap-3 items-center">
+                  {type === 'bookRequests' && (
+                    <div className="flex gap-0.5 items-center">
+                      <UserAvatar
+                        name={book.name as string}
+                        containerStyle="w-6 h-6 text-xs"
+                      />
+
+                      <span>
+                        {(book.name as string).split(' ').slice(0, 2).join(' ')}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex gap-0.5 items-center">
-                    <UserAvatar
-                      name={book.name as string}
-                      containerStyle="w-6 h-6 text-xs"
+                    <Image
+                      src="/icons/admin/calendar.svg"
+                      alt="created date"
+                      width={16}
+                      height={16}
                     />
-
-                    <span>
-                      {(book.name as string).split(' ').slice(0, 2).join(' ')}
-                    </span>
+                    <span>{book.date.toLocaleDateString()}</span>
                   </div>
-                )}
-
-                <div className="flex gap-0.5 items-center">
-                  <Image
-                    src="/icons/admin/calendar.svg"
-                    alt="created date"
-                    width={16}
-                    height={16}
-                  />
-                  <span>{book.date.toLocaleDateString()}</span>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <Empty type={type} />
+        )}
       </div>
     </>
   );

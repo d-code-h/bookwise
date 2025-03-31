@@ -72,7 +72,7 @@ const ApprovalDialog = ({
               ? 'Approve Book Request'
               : 'Deny Account Request'}
           </DialogTitle>
-          <DialogDescription className="text-center text-base text-[#64748B]">
+          <DialogDescription className="text-center text-base text-gray-400">
             {variant === 'SUCCESS'
               ? "Approve the student's account request and grant access.A confirmation email will be sent upon approval."
               : "Denying this request will notify the student they're not eligible due to unsuccessful ID card verification."}
