@@ -19,7 +19,7 @@ const BorrowedBooksList = async () => {
   if (borrowedBooks.length < 1) return;
   return (
     <div>
-      <h2 className="font-bebas-neue text-4xl text-light-100" my-6>
+      <h2 className="font-bebas-neue text-4xl text-light-100 my-6">
         Borrowed Books
       </h2>
 

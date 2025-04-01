@@ -12,7 +12,7 @@ const UserProfile = ({
   role,
 }: User) => {
   return (
-    <div className="space-y-9 min-w-[400px] max-w-[700px] h-fit p-10 pt-24 bg-gradient-custom rounded-[20px] relative">
+    <div className="space-y-9 w-full md:min-w-[400px] max-w-[700px] h-fit p-10 pt-24 bg-gradient-custom rounded-[20px] relative">
       <Image
         src="/icons/clip.svg"
         alt="clip"
