@@ -36,7 +36,6 @@ const AllBookRequests = async () => {
 
   return (
     <div>
-      <h2>Book Requests</h2>
       <TableWrapper data={bookRequests} type="BookRequests" />
     </div>
   );

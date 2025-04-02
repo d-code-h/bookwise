@@ -88,8 +88,11 @@ const TableWrapper = <
         <div className="space-x-5">
           <ColumnSorter type={type} table={table} />
           {type === 'Books' && (
-            <Button className="bg-primary-admin" asChild>
-              <Link href="/admin/books/new" className="text-white">
+            <Button
+              className="bg-primary-admin hover:bg-primary-admin/75"
+              asChild
+            >
+              <Link href="/admin/books/new" className="text-white ">
                 + Create a New Book
               </Link>
             </Button>

@@ -12,7 +12,7 @@ const UserProfile = ({
   role,
 }: User) => {
   return (
-    <div className="space-y-9 min-w-[400px] max-w-[700px] h-fit p-10 pt-24 bg-gradient-custom rounded-[20px] relative">
+    <div className="space-y-9 w-full md:min-w-[400px] max-w-[700px] h-fit p-10 pt-24 bg-gradient-custom rounded-[20px] relative">
       <Image
         src="/icons/clip.svg"
         alt="clip"
@@ -32,14 +32,18 @@ const UserProfile = ({
           <div className="space-y-2.5">
             <div className="flex gap-0.5">
               <Image
-                src={status ? '/icons/success.svg' : '/icons/alert.svg'}
+                src={
+                  status === 'APPROVED'
+                    ? '/icons/success.svg'
+                    : '/icons/alert.svg'
+                }
                 alt="status"
                 width={13}
                 height={13}
               />
               {/* Show status by role */}
               <small className="text-sm">
-                {status ? 'Verfied ' : 'Unverified '}
+                {status === 'APPROVED' ? 'Verfied ' : 'Unverified '}
                 {role && role[0] + role?.slice(1)?.toLowerCase()}
               </small>
             </div>

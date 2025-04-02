@@ -4,17 +4,23 @@ import { differenceInDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-const DueDate = ({ date }: { date: string }) => {
+const DueDate = ({
+  createdAt,
+  dueDate,
+}: {
+  createdAt: Date;
+  dueDate: string;
+}) => {
   const [isDue, setIsDue] = useState(false);
   const [dueDifference, setDueDifference] = useState(0);
 
   useEffect(() => {
     const result = differenceInDays(
-      new Date(date),
-      new Date().toISOString().slice(0, 10),
+      new Date(dueDate),
+      createdAt.toISOString().slice(0, 10),
     );
 
-    if (result === 0) {
+    if (result <= 0) {
       setIsDue(true);
     } else {
       setDueDifference(result);

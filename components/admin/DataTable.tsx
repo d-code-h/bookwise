@@ -3,6 +3,7 @@
 import {
   ColumnDef,
   flexRender,
+  Row,
   Table as TableType,
 } from '@tanstack/react-table';
 
@@ -28,6 +29,11 @@ export function DataTable<
   TData extends TableBook | TableUser | AccountRequests | BookRequests,
   TValue,
 >({ columns, table }: DataTableProps<TData, TValue>) {
+  const handleClick = (row: Row<TData>) => {
+    if ('info' in row.original && 'title' in row.original.info) {
+      window.location.href = `/admin/books/${row.original.id}`;
+    }
+  };
   return (
     <div className="rounded-md">
       <Table>
@@ -56,9 +62,10 @@ export function DataTable<
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="border-light-300 font-medium text-sm "
                 key={row.id}
+                className="border-light-300 font-medium text-sm"
                 data-state={row.getIsSelected() && 'selected'}
+                onClick={() => handleClick(row)}
               >
                 {row.getVisibleCells().map((cell) => {
                   if (cell.column.id === 'id') {

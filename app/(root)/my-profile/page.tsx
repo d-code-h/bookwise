@@ -8,34 +8,46 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 const MyProfile = async () => {
-  const session = await auth();
+  try {
+    const session = await auth();
 
-  if (!session?.user?.id) redirect('/sign-in');
+    if (!session?.user?.id) {
+      redirect('/sign-in');
+      return null; // Ensure no further execution
+    }
 
-  const [userInfo] = await db
-    .select({
-      fullName: users.fullName,
-      email: users.email,
-      universityId: users.universityId,
-      universityCard: users.universityCard,
-      status: users.status,
-      role: users.role,
-    })
-    .from(users)
-    .where(eq(users.id, session?.user?.id))
-    .limit(1);
+    const [userInfo] = await db
+      .select({
+        fullName: users.fullName,
+        email: users.email,
+        universityId: users.universityId,
+        universityCard: users.universityCard,
+        status: users.status,
+        role: users.role,
+      })
+      .from(users)
+      .where(eq(users.id, session?.user?.id))
+      .limit(1);
 
-  if (!userInfo) redirect('/');
+    if (!userInfo) {
+      redirect('/');
+      return null; // Ensure no further execution
+    }
 
-  return (
-    <div className="flex flex-col md:pt-10 md:flex-row gap-8 md:gap-20">
-      {/* User Profile */}
-      <UserProfile {...userInfo} />
+    return (
+      <div className="flex flex-col md:pt-10 md:flex-row gap-8 md:gap-20">
+        {/* User Profile */}
+        <UserProfile {...userInfo} />
 
-      {/* Borrowed books */}
-      <BorrowedBooksList />
-    </div>
-  );
+        {/* Borrowed books */}
+        <BorrowedBooksList />
+      </div>
+    );
+  } catch (error) {
+    console.error('Error loading profile:', error);
+    redirect('/error'); // Redirect to a generic error page
+    return null; // Ensure no further execution
+  }
 };
 
 export default MyProfile;

@@ -152,7 +152,7 @@ const TotalReport = async () => {
     <div className="flex gap-4 flex-wrap mb-6">
       {totalReport.map(({ title, total, status, value }, index) => (
         <section
-          className="space-y-2.5 p-5 bg-white rounded-xl min-w-fit flex-1 hover:bg-light-200"
+          className="space-y-2.5 p-5 bg-white rounded-xl min-w-fit flex-1 hover:bg-primary-admin/30"
           key={index}
         >
           <h6 className="font-medium text-base text-gray-400 tracking-tight flex gap-2.5 items-center">

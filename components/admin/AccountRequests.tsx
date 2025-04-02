@@ -17,7 +17,7 @@ const AccountRequests: FC<Props> = ({ accountRequests }) => {
         {accountRequests.map((account) => (
           <div
             key={account.email}
-            className="flex flex-wrap gap-3 flex-col justify-center items-center px-3 py-3.5 bg-light-300 rounded-lg flex-1 hover:bg-light-200"
+            className="flex flex-wrap gap-3 flex-col justify-center items-center px-3 py-3.5 bg-light-300 rounded-lg flex-1 hover:bg-primary-admin/30"
           >
             <UserAvatar name={account.fullName} />
 
