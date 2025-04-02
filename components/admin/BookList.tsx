@@ -71,11 +71,9 @@ const BookList = ({
             <div
               key={book.id || index}
               className={cn(
-                'flex gap-3.5 items-center p-3.5 rounded-lg',
+                'flex gap-3.5 items-center p-3.5 rounded-lg hover:bg-primary-admin/30',
 
-                type === 'bookRequests'
-                  ? 'bg-light-300 hover:bg-light-200'
-                  : 'bg-white hover:bg-light-200',
+                type === 'bookRequests' ? 'bg-light-300' : 'bg-white',
               )}
             >
               <BookCover

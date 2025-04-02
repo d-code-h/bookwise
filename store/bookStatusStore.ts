@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 type STATUS = 'BORROWED' | 'RETURNED' | 'LATE RETURN';
 interface State {
-  bookStatuses: Record<string, { status: STATUS; returnDate: Date | null }>;
+  bookStatuses: Record<string, { status: STATUS; returnDate: Date | '-' }>;
   updateStatus: ({
     borrowedId,
     status,
@@ -10,7 +10,7 @@ interface State {
   }: {
     borrowedId: string;
     status: STATUS;
-    returnDate: Date | null;
+    returnDate: Date | '-';
   }) => void;
 }
 

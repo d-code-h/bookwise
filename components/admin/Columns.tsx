@@ -438,7 +438,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
       );
 
       if (!bookStatus) {
-        setBookStatusStore({ borrowedId, status, returnDate: null });
+        setBookStatusStore({ borrowedId, status, returnDate: '-' });
         bookStatus =
           useBookStatusStore.getState().bookStatuses[borrowedId].status;
       }
@@ -449,7 +449,7 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
         const returnDate =
           newStatus === 'RETURNED' || newStatus === 'LATE RETURN'
             ? new Date()
-            : null;
+            : '-';
         const result = await fetch('/api/books/update-status', {
           method: 'POST',
           body: JSON.stringify({
@@ -549,13 +549,20 @@ export const bookRequestsColumns: ColumnDef<BookRequests>[] = [
     header: 'Return date',
     cell: ({ row }) => {
       const id = row.getValue('id') as string;
+      const dbReturnDate = row.getValue('returnDate') as string;
+      console.log('dbReturnDate', dbReturnDate);
 
-      const returnDate = useBookStatusStore(
-        (state) => state.bookStatuses[id]?.returnDate,
-      );
+      let returnDate =
+        useBookStatusStore((state) => state.bookStatuses[id]?.returnDate) ||
+        dbReturnDate;
 
       return (
-        <div>{!returnDate ? '-' : dateConverter(new Date(returnDate))}</div>
+        <div>
+          {!returnDate ||
+          (typeof returnDate === 'string' && returnDate.length === 1)
+            ? '-'
+            : dateConverter(new Date(returnDate))}
+        </div>
       );
     },
   },
