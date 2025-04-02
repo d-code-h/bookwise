@@ -12,6 +12,7 @@ interface Props {
   title: string;
   genre: string;
   dueDate: string;
+  createdAt: Date;
 }
 
 const BorrowedBook = ({
@@ -21,6 +22,7 @@ const BorrowedBook = ({
   title,
   genre,
   dueDate,
+  createdAt,
 }: Props) => {
   return (
     <li className="bg-dark-500 p-5 pt-0 m-0 rounded-2xl relative">
@@ -48,7 +50,7 @@ const BorrowedBook = ({
             <p className="text-light-100 text-base">Borrowed on Dec 31</p>
           </div>
           <div className="flex justify-between">
-            <DueDate date={dueDate} />
+            <DueDate createdAt={createdAt} dueDate={dueDate} />
 
             <div className="rounded-sm bg-[#8B384870] w-7 h-7 flex justify-center items-center">
               {/* TODO: Write receipt downloading logic */}

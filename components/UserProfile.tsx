@@ -32,14 +32,18 @@ const UserProfile = ({
           <div className="space-y-2.5">
             <div className="flex gap-0.5">
               <Image
-                src={status ? '/icons/success.svg' : '/icons/alert.svg'}
+                src={
+                  status === 'APPROVED'
+                    ? '/icons/success.svg'
+                    : '/icons/alert.svg'
+                }
                 alt="status"
                 width={13}
                 height={13}
               />
               {/* Show status by role */}
               <small className="text-sm">
-                {status ? 'Verfied ' : 'Unverified '}
+                {status === 'APPROVED' ? 'Verfied ' : 'Unverified '}
                 {role && role[0] + role?.slice(1)?.toLowerCase()}
               </small>
             </div>

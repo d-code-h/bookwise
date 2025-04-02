@@ -17,6 +17,7 @@ const BorrowedBooksList = async () => {
     .where(eq(borrowRecords.userId, session.user.id));
 
   if (borrowedBooks.length < 1) return;
+
   return (
     <div>
       <h2 className="font-bebas-neue text-4xl text-light-100 my-6">
@@ -26,7 +27,7 @@ const BorrowedBooksList = async () => {
       <div className="flex flex-wrap gap-8 mt-6">
         {borrowedBooks.map(
           ({
-            borrow_records: { dueDate },
+            borrow_records: { createdAt, dueDate },
             books: { id, coverUrl, coverColor, title, genre },
           }) => (
             <BorrowedBook
@@ -36,6 +37,7 @@ const BorrowedBooksList = async () => {
               coverUrl={coverUrl}
               title={title}
               genre={genre}
+              createdAt={createdAt as Date}
               dueDate={dueDate}
             />
           ),

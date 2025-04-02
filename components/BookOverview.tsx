@@ -53,12 +53,13 @@ const BookOverview = async ({
     console.log('Error checking borrowed book:', error);
     return null;
   }
+  console.log('Info', isBorrowedBook);
 
   const borrowingEligibility = {
     isEligible:
       availableCopies > 0 &&
       user.status === 'APPROVED' &&
-      (isBorrowedBook.length === 0 || isBorrowedBook[0].status !== 'BORROWED'),
+      (isBorrowedBook.length === 0 || isBorrowedBook[0]?.status !== 'BORROWED'),
     message:
       availableCopies <= 0
         ? 'Book is not available'
