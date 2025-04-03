@@ -53,7 +53,6 @@ const BookOverview = async ({
     console.log('Error checking borrowed book:', error);
     return null;
   }
-  console.log('Info', isBorrowedBook);
 
   const borrowingEligibility = {
     isEligible:

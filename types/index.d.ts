@@ -110,3 +110,14 @@ export interface User {
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | null;
   role: 'USER' | 'ADMIN' | null;
 }
+
+export type EmailType =
+  | 'WELCOME'
+  | 'APPROVAL'
+  | 'BORROW'
+  | 'RECEIPT'
+  | 'DUE'
+  | 'RETURN'
+  | 'INACTIVITY'
+  | 'CHECKIN'
+  | 'CONGRATS';
