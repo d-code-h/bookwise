@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import React, { ReactNode } from 'react';
 import { auth } from '@/auth';
+import Modal from '@/components/Modal';
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
@@ -16,6 +17,8 @@ const Layout = async ({ children }: { children: ReactNode }) => {
             <Image src="/icons/logo.svg" alt="logo" width={37} height={37} />
             <h1 className="text-2xl font-semibold text-white">BookWise </h1>
           </div>
+
+          <Modal />
 
           <div>{children}</div>
         </div>
