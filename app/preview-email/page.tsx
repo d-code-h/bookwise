@@ -1,5 +1,5 @@
-import Email from '@/components/Email';
-import Receipt from '@/components/Receipt';
+import Email from '@/components/mails/Email';
+import Receipt from '@/components/mails/Receipt';
 import { dateConverter } from '@/lib/utils';
 
 export default function PreviewEmail() {

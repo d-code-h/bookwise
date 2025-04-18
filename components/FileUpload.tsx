@@ -76,7 +76,11 @@ const FileUpload = ({
     console.log(error);
 
     toast.error(`${type} upload failed`, {
-      description: `Your ${type} could not be uploaded. Please try again.`,
+      description: (
+        <span className="text-red-400">
+          Your {type} could not be uploaded. Please try again.
+        </span>
+      ),
       icon: '🚫',
       position: 'top-center',
     });
@@ -88,7 +92,11 @@ const FileUpload = ({
     toast.success(`${type} uploaded successfully`, {
       icon: '🚀',
       position: 'top-center',
-      description: `${res.filePath} uploaded successfully`,
+      description: (
+        <span className="text-dark-400">
+          {res.filePath} uploaded successfully
+        </span>
+      ),
     });
   };
 
@@ -96,14 +104,22 @@ const FileUpload = ({
     if (type === 'image') {
       if (file.size > 20 * 1024 * 1024) {
         toast.error('File size too large', {
-          description: 'Please upload a file less than 20MB in size',
+          description: (
+            <span className="text-red-400">
+              Please upload a file less than 20MB in size
+            </span>
+          ),
         });
         return false;
       }
     } else if (type === 'video') {
       if (file.size > 50 * 1024 * 1024) {
         toast.error('File size too large', {
-          description: 'Please upload a file less than 50MB in size',
+          description: (
+            <span className="text-red-400">
+              Please upload a file less than 50MB in size
+            </span>
+          ),
         });
         return false;
       }

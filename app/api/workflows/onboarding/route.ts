@@ -3,6 +3,7 @@ import { users } from '@/database/schema';
 import { sendEmail } from '@/lib/workflow';
 import { serve } from '@upstash/workflow/nextjs';
 import { eq } from 'drizzle-orm';
+import ResendEmail from '@/components/mails/ResendEmail';
 
 type UserState = 'non-active' | 'active';
 
@@ -41,11 +42,12 @@ export const { POST } = serve<InitialData>(async (context) => {
 
   // New user signup
   await context.run('new-signup', async () => {
-    await sendEmail({
-      email,
-      subject: 'Welcome to Bookwise',
-      message: `Hi ${fullName}, welcome to Bookwise!`,
-    });
+    // await sendEmail({
+    //   email,
+    //   subject: 'Welcome to Bookwise',
+    //   component: <ResendEmail url="https://bookwise.com" />
+    //   // message: `Hi ${fullName}, welcome to Bookwise!`,
+    // });
   });
 
   // Intial waiting period

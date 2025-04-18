@@ -58,16 +58,25 @@ const AuthForm = <T extends FieldValues>({
 
     if (result.success) {
       toast.success('Successfully signed in', {
-        description: isSignIn
-          ? 'You have successfully signed in to your account'
-          : 'You have successfully created your account',
+        description: isSignIn ? (
+          <span className="text-dark-400">
+            You have successfully signed in to your account
+          </span>
+        ) : (
+          <span className="text-dark-400">
+            You have successfully created your account
+          </span>
+        ),
       });
 
       router.push('/');
     } else {
       toast.error(`Error ${isSignIn ? 'signing in' : 'signing up'}`, {
-        description:
-          result.error ?? 'An error occurred. Please try again later',
+        description: result.error ?? (
+          <span className="text-red-400">
+            An error occurred. Please try again later
+          </span>
+        ),
       });
     }
     setPending(false);

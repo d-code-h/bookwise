@@ -58,17 +58,20 @@ const BookForm = ({ type, ...books }: Props) => {
 
     if (result.success) {
       toast.success('Success', {
-        description:
-          type === 'create'
-            ? 'Book created successfully'
-            : 'Book updated successfully',
+        description: (
+          <span className="text-dark-400">
+            {type === 'create'
+              ? 'Book created successfully'
+              : 'Book updated successfully'}
+          </span>
+        ),
         icon: '🚀',
         position: 'top-center',
       });
       router.push(`/admin/books/${result.data.id}`);
     } else {
       toast.error('Error', {
-        description: result.message,
+        description: <span className="text-red-400">{result.message}</span>,
         icon: '🚫',
         position: 'top-center',
       });

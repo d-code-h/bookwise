@@ -27,7 +27,8 @@ const BorrowBook = ({
   const handleBorrowBook = async () => {
     if (!isEligible) {
       toast.error('Error', {
-        description: message,
+        description: <span className="text-red-400">{message}</span>,
+
         icon: '🚫',
         position: 'top-center',
       });
@@ -41,7 +42,9 @@ const BorrowBook = ({
 
       if (result.success) {
         toast.success('Success', {
-          description: 'Book borrowed successfully',
+          description: (
+            <span className="text-dark-400">Book borrowed successfully</span>
+          ),
           icon: '🚀',
           position: 'top-center',
         });
@@ -49,14 +52,18 @@ const BorrowBook = ({
         router.push('/');
       } else {
         toast.error('Error', {
-          description: result.error,
+          description: <span className="text-red-400">{result.error}</span>,
           icon: '🚫',
           position: 'top-center',
         });
       }
     } catch (error) {
       toast.error('Error', {
-        description: 'An error occurred while borrowing the book',
+        description: (
+          <span className="text-red-400">
+            An error occurred while borrowing the book
+          </span>
+        ),
         icon: '🚫',
         position: 'top-center',
       });
